@@ -4,18 +4,22 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import './assets/styles/globals.css'
-import './assets/styles/toast.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 /* --- COMPONENTS --- */
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { Suspense } from 'react'
-import { ToastContainer } from 'react-toastify'
 import AppRouter from './AppRouter'
 import { PageLayout } from './modules/common/components/Layout/Layout'
 
-/* --- CONSTANTS --- */
+/* --- CONSTANTS and FUNCTIONS --- */
 import theme from './modules/common/utils/theme'
+import { initI18next } from './modules/common/utils/i18next'
+
+console.log('👋')
+
+initI18next()
 
 function App() {
   return (
@@ -27,17 +31,6 @@ function App() {
             <AppRouter />
           </Suspense>
         </PageLayout>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
       </ThemeProvider>
     </>
   )
