@@ -1,4 +1,16 @@
 {
+  "trailingComma": "es5",
+  "semi": false,
   "singleQuote": true,
-  "trailingComma": "all"
+  "quoteProps": "consistent",
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "tabWidth": 2,
+  "parser": "typescript",
+  "printWidth": 125,
+  "endOfLine": "lf",
+  "plugins": [
+    "prettier-plugin-organize-imports"
+  ],
+  "proseWrap": "preserve"
 }
