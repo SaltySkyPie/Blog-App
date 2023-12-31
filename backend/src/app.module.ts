@@ -1,12 +1,12 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { GraphQLModule } from '@nestjs/graphql'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { join } from 'path'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { join } from 'path'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ConfigModule } from '@nestjs/config'
-import { ArticleModule } from './article/article.module';
+import { ArticleModule } from './article/article.module'
 
 @Module({
   imports: [
@@ -35,6 +35,7 @@ import { ArticleModule } from './article/article.module';
       logging: 'all',
       synchronize: false,
     }),
+    ArticleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
