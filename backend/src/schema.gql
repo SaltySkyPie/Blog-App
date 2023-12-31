@@ -37,11 +37,13 @@ type Mutation {
   createArticle(createArticleInput: CreateArticleInput!): Article!
   removeArticle(id: Int!): Boolean!
   updateArticle(updateArticleInput: UpdateArticleInput!): Article!
+  updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Query {
   article(id: ID!): Article!
   articles: [Article!]!
+  user(id: Int!): User!
 }
 
 input UpdateArticleInput {
@@ -50,4 +52,21 @@ input UpdateArticleInput {
   perex: String
   state: ArticleState = DRAFT
   title: String
+}
+
+input UpdateUserInput {
+  firstName: String
+  id: ID!
+  lastName: String
+  middleName: String
+  password: String
+  username: String
+}
+
+type User {
+  firstName: String!
+  id: ID!
+  lastName: String!
+  middleName: String
+  username: String!
 }
