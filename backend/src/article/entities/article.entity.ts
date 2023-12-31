@@ -2,7 +2,7 @@ import { RandomGenerator } from '@app/utils/generator'
 import { Field, GraphQLISODateTime, ID, ObjectType, registerEnumType } from '@nestjs/graphql'
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
-export enum ArticleState  {
+export enum ArticleState {
   DRAFT = 'draft',
   PUBLISHED = 'published',
   PRIVATE = 'private',
