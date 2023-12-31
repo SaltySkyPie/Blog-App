@@ -50,11 +50,11 @@ export class AuthService {
       middleName: user.middleName,
     }
     return {
-      access_token: this.jwtService.sign(payload, {
+      accessToken: this.jwtService.sign(payload, {
         expiresIn: '15m',
         secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
       }),
-      refresh_token: this.jwtService.sign(payload, {
+      refreshToken: this.jwtService.sign(payload, {
         expiresIn: '7d',
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
       }),
