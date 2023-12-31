@@ -1,12 +1,16 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
+import { APP_GUARD } from '@nestjs/core'
 import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { join } from 'path'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ArticleModule } from './article/article.module'
+import { AuthModule } from './auth/auth.module'
+import { AccessTokenAuthGuard } from './auth/guards/access-token.guard'
+import { UserModule } from './user/user.module'
 
 @Module({
   imports: [
@@ -36,8 +40,17 @@ import { ArticleModule } from './article/article.module'
       synchronize: false,
     }),
     ArticleModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenAuthGuard,
+    },
+  ],
 })
 export class AppModule {}
