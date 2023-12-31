@@ -1,6 +1,6 @@
+import { RandomGenerator } from '@app/utils/generator'
 import { Field, ID, ObjectType } from '@nestjs/graphql'
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { RandomGenerator } from '@app/utils/generator'
 
 @Entity()
 @ObjectType()

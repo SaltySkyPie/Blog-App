@@ -3,9 +3,9 @@ import { User } from '@app/user/entities/user.entity'
 import { Body, Controller, Get, Post, Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { Public } from './decorators/public.decorator'
+import { AccessTokenAuthGuard } from './guards/access-token.guard'
 import { LocalAuthGuard } from './guards/local-auth.guard'
 import { RefreshTokenAuthGuard } from './guards/refresh-token.guard'
-import { AccessTokenAuthGuard } from './guards/access-token.guard'
 
 @Controller('api/auth')
 export class AuthController {

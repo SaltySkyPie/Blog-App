@@ -34,7 +34,10 @@ export class ArticleResolver {
   }
 
   @Mutation(() => Article)
-  async changeState(@Args('id', { type: () => ID }) id: string, @Args('state', { type: () => ArticleState }) state: ArticleState) {
+  async changeState(
+    @Args('id', { type: () => ID }) id: string,
+    @Args('state', { type: () => ArticleState }) state: ArticleState
+  ) {
     return await this.articleService.changeState(id, state)
   }
 }
