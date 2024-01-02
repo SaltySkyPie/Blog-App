@@ -5,7 +5,7 @@ import { CreateUserInput } from './dto/create-user.input'
 import { UpdateUserInput } from './dto/update-user.input'
 import { User } from './entities/user.entity'
 
-export type JwtUser = Omit<User, 'password'>
+export type JwtUser = Omit<Omit<User, 'password'>, 'articles'>
 
 @Injectable()
 export class UserService {

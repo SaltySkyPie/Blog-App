@@ -1,6 +1,7 @@
+import { User } from '@app/user/entities/user.entity'
 import { RandomGenerator } from '@app/utils/generator'
 import { Field, GraphQLISODateTime, ID, ObjectType, registerEnumType } from '@nestjs/graphql'
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 export enum ArticleState {
   DRAFT = 'draft',
@@ -53,4 +54,14 @@ export class Article {
     default: ArticleState.DRAFT,
   })
   state: ArticleState
+
+  @ManyToOne(() => User, {
+    orphanedRowAction: 'delete',
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({
+    name: 'userId',
+  })
+  @Field(() => User)
+  user: User
 }
