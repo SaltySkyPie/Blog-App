@@ -4,17 +4,21 @@ import { Repository } from 'typeorm'
 import { CreateArticleInput } from './dto/create-article.input'
 import { UpdateArticleInput } from './dto/update-article.input'
 import { Article, ArticleState } from './entities/article.entity'
+import { JwtUser } from '@app/user/user.service'
+import { UserService } from '@app/user/user.service'
 
 @Injectable()
 export class ArticleService {
   constructor(
     @InjectRepository(Article)
-    private articleRepository: Repository<Article>
+    private articleRepository: Repository<Article>,
+    private userService: UserService
   ) {}
 
-  async create(createArticleInput: CreateArticleInput) {
+  async create(createArticleInput: CreateArticleInput, user: JwtUser) {
     const article = new Article()
     this.fillArticle(article, createArticleInput)
+    article.user = await this.userService.findOneById(user.id)
     return await this.articleRepository.save(article)
   }
 

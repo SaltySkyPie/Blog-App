@@ -10,6 +10,7 @@ type Article {
   state: ArticleState!
   title: String!
   updatedAt: DateTime!
+  user: User!
 }
 
 enum ArticleState {
@@ -64,6 +65,7 @@ input UpdateUserInput {
 }
 
 type User {
+  articles: [Article!]!
   firstName: String!
   id: ID!
   lastName: String!
