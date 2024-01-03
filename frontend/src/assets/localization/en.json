@@ -1,3 +1,21 @@
 {
-    
+    "common": {
+        "notFound": "Oops! Page not found.",
+        "profile": "Profile",
+        "logout": "Logout",
+        "login": "Login",
+        "register": "Register",
+        "contact": "Contact",
+        "about": "About",
+        "error": "Error",
+        "loading": "Loading"
+    },
+    "articleList": {
+        "title": "Articles"
+    },
+    "nav":{
+        "recentArticles": "Recent Articles",
+        "createArticle": "Create Article",
+        "myArticles": "My Articles"
+    }
 }
