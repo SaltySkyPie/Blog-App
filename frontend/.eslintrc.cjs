@@ -7,7 +7,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:react/jsx-runtime',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'src/graphql/types.ts', 'apollo.config.ts'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'src/graphql/types.ts'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
