@@ -13,8 +13,8 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyledLink as Link } from '../../Misc/Link.styled'
 import { useNavigate } from 'react-router-dom'
+import { StyledLink as Link } from '../../Misc/Link.styled'
 
 export interface Pages {
   title: string
@@ -139,8 +139,8 @@ function Navbar() {
               }}
             >
               {pages.map((page) => (
-                <Link to={page.link}>
-                  <MenuItem key={page.link} onClick={handleCloseNavMenu}>
+                <Link to={page.link} key={page.link}>
+                  <MenuItem onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{t(page.title)}</Typography>
                   </MenuItem>
                 </Link>
@@ -177,8 +177,8 @@ function Navbar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Link to={page.link}>
-                <Button key={page.link} onClick={handleCloseNavMenu} sx={{ my: 2, display: 'block' }}>
+              <Link to={page.link} key={page.link}>
+                <Button onClick={handleCloseNavMenu} sx={{ my: 2, display: 'block' }}>
                   {t(page.title)}
                 </Button>
               </Link>
@@ -208,8 +208,8 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <Link to={setting.link}>
-                  <MenuItem key={setting.link} onClick={handleCloseUserMenu}>
+                <Link to={setting.link} key={setting.link}>
+                  <MenuItem onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{t(setting.title)}</Typography>
                   </MenuItem>
                 </Link>
