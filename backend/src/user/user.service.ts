@@ -18,7 +18,7 @@ export class UserService {
     const notUnique = await this.userRepository.findOne({ where: { username: createUserInput.username } })
 
     if (notUnique) {
-      throw new Error('Username already exists')
+      throw new Error('Username is already taken')
     }
 
     const user = new User()
