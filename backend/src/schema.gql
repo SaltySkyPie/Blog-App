@@ -6,6 +6,7 @@ type Article {
   content: String!
   createdAt: DateTime!
   id: ID!
+  imageUrl: String!
   perex: String!
   state: ArticleState!
   title: String!
