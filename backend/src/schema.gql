@@ -6,7 +6,7 @@ type Article {
   content: String!
   createdAt: DateTime!
   id: ID!
-  imageUrl: String!
+  imageUrl: String
   perex: String!
   state: ArticleState!
   title: String!
@@ -24,6 +24,7 @@ enum ArticleState {
 
 input CreateArticleInput {
   content: String!
+  imageUrl: String
   perex: String!
   state: ArticleState! = DRAFT
   title: String!
@@ -46,11 +47,13 @@ type Query {
   article(id: ID!): Article!
   articles: [Article!]!
   user(id: Int!): User!
+  userArticles: [Article!]!
 }
 
 input UpdateArticleInput {
   content: String
   id: ID!
+  imageUrl: String
   perex: String
   state: ArticleState = DRAFT
   title: String

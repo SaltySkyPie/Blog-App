@@ -12,6 +12,9 @@ export class CreateArticleInput {
   @Field()
   content: string
 
+  @Field({ nullable: true})
+  imageUrl: string
+
   @Field(() => ArticleState, { defaultValue: ArticleState.DRAFT })
   state: ArticleState
 }

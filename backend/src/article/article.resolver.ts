@@ -1,11 +1,11 @@
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator'
+import { Public } from '@app/auth/decorators/public.decorator'
+import { JwtUser } from '@app/user/user.service'
 import { Args, ID, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ArticleService } from './article.service'
 import { CreateArticleInput } from './dto/create-article.input'
 import { UpdateArticleInput } from './dto/update-article.input'
 import { Article, ArticleState } from './entities/article.entity'
-import { CurrentUser } from '@app/auth/decorators/current-user.decorator'
-import { JwtUser } from '@app/user/user.service'
-import { Public } from '@app/auth/decorators/public.decorator'
 
 @Resolver(() => Article)
 export class ArticleResolver {
@@ -19,30 +19,43 @@ export class ArticleResolver {
   @Query(() => [Article], { name: 'articles' })
   @Public()
   async findAll() {
-    return await this.articleService.findAll()
+    return await this.articleService.findAll({
+      where: {
+        state: ArticleState.PUBLISHED,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    })
   }
 
   @Query(() => Article, { name: 'article' })
   @Public()
   async findOne(@Args('id', { type: () => ID }) id: string) {
-    return await this.articleService.findOne(id)
+    return await this.articleService.findAvailableOne(id)
+  }
+
+  @Query(() => [Article], { name: 'userArticles' })
+  async findUserArticles(@CurrentUser('id') userId: string) {
+    return await this.articleService.findUserArticles(userId)
   }
 
   @Mutation(() => Article)
-  async updateArticle(@Args('updateArticleInput') updateArticleInput: UpdateArticleInput) {
-    return await this.articleService.update(updateArticleInput.id, updateArticleInput)
+  async updateArticle(@Args('updateArticleInput') updateArticleInput: UpdateArticleInput, @CurrentUser() user: JwtUser) {
+    return await this.articleService.update(updateArticleInput.id, updateArticleInput, user)
   }
 
   @Mutation(() => Boolean)
-  async removeArticle(@Args('id', { type: () => Int }) id: string) {
-    return await this.articleService.remove(id)
+  async removeArticle(@Args('id', { type: () => Int }) id: string, @CurrentUser() user: JwtUser) {
+    return await this.articleService.remove(id, user)
   }
 
   @Mutation(() => Article)
   async changeState(
     @Args('id', { type: () => ID }) id: string,
-    @Args('state', { type: () => ArticleState }) state: ArticleState
+    @Args('state', { type: () => ArticleState }) state: ArticleState,
+    @CurrentUser() user: JwtUser
   ) {
-    return await this.articleService.changeState(id, state)
+    return await this.articleService.changeState(id, state, user)
   }
 }

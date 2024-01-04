@@ -35,9 +35,11 @@ export class Article {
   @Column('longtext')
   content: string
 
-  @Field()
-  @Column('text')
-  imageUrl: string
+  @Field({ nullable: true })
+  @Column('text', {
+    nullable: true,
+  })
+  imageUrl?: string
 
   @CreateDateColumn({
     name: 'createdAt',

@@ -1,11 +1,10 @@
+import { JwtUser, UserService } from '@app/user/user.service'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { FindManyOptions, Repository } from 'typeorm'
 import { CreateArticleInput } from './dto/create-article.input'
 import { UpdateArticleInput } from './dto/update-article.input'
 import { Article, ArticleState } from './entities/article.entity'
-import { JwtUser } from '@app/user/user.service'
-import { UserService } from '@app/user/user.service'
 
 @Injectable()
 export class ArticleService {
@@ -22,11 +21,9 @@ export class ArticleService {
     return await this.articleRepository.save(article)
   }
 
-  findAll() {
+  findAll(options?: FindManyOptions<Article>) {
     return this.articleRepository.find({
-      order: {
-        createdAt: 'DESC',
-      },
+      ...options,
     })
   }
 
@@ -36,23 +33,55 @@ export class ArticleService {
     })
   }
 
-  async update(id: string, updateArticleInput: UpdateArticleInput) {
+  findAvailableOne(id: string) {
+    return this.articleRepository.findOneOrFail({
+      where: {
+        id,
+        state: ArticleState.PUBLISHED || ArticleState.HIDDEN,
+      },
+    })
+  }
+
+  findUserArticles(userId: string) {
+    return this.articleRepository.find({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    })
+  }
+
+  findUserArticle(id: string, userId: string) {
+    return this.articleRepository.findOneOrFail({
+      where: {
+        id,
+        user: {
+          id: userId,
+        },
+      },
+    })
+  }
+
+  async update(id: string, updateArticleInput: UpdateArticleInput, user: JwtUser) {
     const article = await this.articleRepository.findOneOrFail({
       where: { id },
     })
+    if (article.user.id !== user.id) {
+      throw new Error('You are not the owner of this article')
+    }
     this.fillArticle(article, updateArticleInput)
     return await this.articleRepository.save(article)
   }
 
-  async remove(id: string) {
-    await this.articleRepository.delete(id)
+  async remove(id: string, user: JwtUser) {
+    const article = await this.findUserArticle(id, user.id)
+    await this.articleRepository.remove(article)
     return true
   }
 
-  async changeState(id: string, state: ArticleState) {
-    const article = await this.articleRepository.findOneOrFail({
-      where: { id },
-    })
+  async changeState(id: string, state: ArticleState, user: JwtUser) {
+    const article = await this.findUserArticle(id, user.id)
     article.state = state
     return await this.articleRepository.save(article)
   }
@@ -61,6 +90,7 @@ export class ArticleService {
     article.title = input.title ?? article.title
     article.perex = input.perex ?? article.perex
     article.content = input.content ?? article.content
+    article.imageUrl = input.imageUrl ?? article.imageUrl
     return article
   }
 }
