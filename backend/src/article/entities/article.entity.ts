@@ -35,6 +35,10 @@ export class Article {
   @Column('longtext')
   content: string
 
+  @Field()
+  @Column('text')
+  imageUrl: string
+
   @CreateDateColumn({
     name: 'createdAt',
   })
