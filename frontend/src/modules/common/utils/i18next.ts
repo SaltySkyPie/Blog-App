@@ -4,8 +4,8 @@ import { initReactI18next } from 'react-i18next'
 import messagesCs from '@app/assets/localization/cs.json'
 import messagesEn from '@app/assets/localization/en.json'
 
-export function initI18next() {
-  i18n.use(initReactI18next).init({
+export async function initI18next() {
+  await i18n.use(initReactI18next).init({
     resources: {
       en: {
         translation: messagesEn,

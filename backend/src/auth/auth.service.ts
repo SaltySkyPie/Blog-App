@@ -1,5 +1,5 @@
 import { CreateUserInput } from '@app/user/dto/create-user.input'
-import { HttpException, Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
@@ -30,6 +30,7 @@ export class AuthService {
 
   async register(userData: CreateUserInput) {
     try {
+
       const hashedPassword = await this.hashData(userData.password)
       const user = await this.usersService.create({
         ...userData,
@@ -37,7 +38,10 @@ export class AuthService {
       })
       return this.login(user)
     } catch (e) {
-      throw new HttpException(e.message, 400)
+       if (e.message.includes('Username is already taken')) {
+         throw new HttpException(e.message, HttpStatus.CONFLICT)
+       }
+       throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
     }
   }
 
