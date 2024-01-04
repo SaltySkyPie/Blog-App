@@ -13,6 +13,7 @@ import { Suspense } from 'react'
 import AppRouter from './AppRouter'
 import { PageLayout } from './modules/common/components/Layout/Layout'
 import { ApolloAppProvider } from './modules/common/utils/apollo'
+import { AuthProvider } from './modules/auth/components/Provider/AuthProvider'
 
 /* --- CONSTANTS and FUNCTIONS --- */
 import { initI18next } from './modules/common/utils/i18next'
@@ -25,6 +26,7 @@ void initI18next()
 function App() {
   return (
     <>
+    <AuthProvider>
       <ApolloAppProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -35,6 +37,7 @@ function App() {
           </PageLayout>
         </ThemeProvider>
       </ApolloAppProvider>
+    </AuthProvider>
     </>
   )
 }
