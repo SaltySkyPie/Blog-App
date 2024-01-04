@@ -13,7 +13,7 @@ export class CreateArticleInput {
   content: string
 
   @Field({ nullable: true})
-  imageUrl: string
+  imageUrl?: string
 
   @Field(() => ArticleState, { defaultValue: ArticleState.DRAFT })
   state: ArticleState
