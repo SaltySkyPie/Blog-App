@@ -6,14 +6,14 @@ const ArticleList = () => {
   const { t } = useTranslation()
   const { data, loading, error } = useGetArticlesQuery()
 
-  if (loading) return <p>{t('common.loading')}</p>
-  if (error) return <p>{t('common.error')}</p>
+  if (loading) return <p>{t('loading')}</p>
+  if (error) return <p>{t('error')}</p>
 
   const articles = data?.articles || []
 
   return (
     <>
-      <h1>{t('articleList.title')}</h1>
+      <h1>{t('articleList')}</h1>
       <ul>
         {articles.map((article: GetArticlesQuery['articles'][0]) => (
           <li key={article.id}>
