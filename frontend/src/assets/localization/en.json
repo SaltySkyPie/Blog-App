@@ -1,21 +1,29 @@
 {
-    "common": {
-        "notFound": "Oops! Page not found.",
-        "profile": "Profile",
-        "logout": "Logout",
-        "login": "Login",
-        "register": "Register",
-        "contact": "Contact",
-        "about": "About",
-        "error": "Error",
-        "loading": "Loading"
-    },
-    "articleList": {
-        "title": "Articles"
-    },
-    "nav":{
-        "recentArticles": "Recent Articles",
-        "createArticle": "Create Article",
-        "myArticles": "My Articles"
-    }
+    "notFound": "Oops! Page not found.",
+    "profile": "Profile",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register",
+    "contact": "Contact",
+    "about": "About",
+    "loading": "Loading",
+    "invalidCredentials": "Invalid credentials",
+    "username": "Username",
+    "password": "Password",
+    "dontHaveAccount": "Don't have an account?",
+    "createOne": "Create one!",
+    "welcomeBack": "Welcome back, {{name}}",
+    "articleList": "Articles",
+    "recentArticles": "Recent Articles",
+    "createArticle": "Create Article",
+    "myArticles": "My Articles",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "middleName": "Middle Name",
+    "passwordConfirmation": "Password Confirmation",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginHere": "Login here!",
+    "thanksForSignUp": "Thanks for signing up!",
+    "registrationFailed": "Registration failed",
+    "usernameAlreadyTaken": "Username already taken"
 }
