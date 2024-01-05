@@ -7,7 +7,7 @@ const NotFoundPage = () => {
     <>
       <Typography variant="h1">404</Typography>
       <Typography variant="h4" color="textSecondary" style={{ margin: '20px 0' }}>
-        {t('common.notFound')}
+        {t('notFound')}
       </Typography>
     </>
   )

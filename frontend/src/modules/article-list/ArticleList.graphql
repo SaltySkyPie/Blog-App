@@ -2,9 +2,17 @@
 
 
 query getArticles {
-  articles {
+articles {
     id
     title
     perex
+    createdAt
+    imageUrl
+    user {
+      id
+      firstName
+      lastName
+      middleName
+    }
   }
 }

@@ -58,6 +58,14 @@ export default function AppRouter() {
         }
       />
       <Route
+        path="/profile/:id"
+        element={
+          <Suspense fallback={<></>}>
+            <div>Profile</div>
+          </Suspense>
+        }
+      />
+      <Route
         path="/create-article"
         element={
           <Suspense fallback={<></>}>

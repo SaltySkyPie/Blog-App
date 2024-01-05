@@ -1,6 +1,7 @@
-import { GetArticlesQuery, useGetArticlesQuery } from '@app/graphql/types'
+import { useGetArticlesQuery } from '@app/graphql/types'
+import { Box, Container, Grid, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import ArticleListItem from './ArticleListItem'
 
 const ArticleList = () => {
   const { t } = useTranslation()
@@ -13,14 +14,18 @@ const ArticleList = () => {
 
   return (
     <>
-      <h1>{t('articleList')}</h1>
-      <ul>
-        {articles.map((article: GetArticlesQuery['articles'][0]) => (
-          <li key={article.id}>
-            <Link to={`/article/${article.id}`}>{article.title}</Link>
-          </li>
-        ))}
-      </ul>
+      <Container>
+        <Box sx={{ my: 5, textAlign: 'center' }}>
+          <Typography variant="h3" gutterBottom>
+            {t('articleList')}
+          </Typography>
+        </Box>
+        <Grid container spacing={4}>
+          {articles.map((article, index) => (
+            <ArticleListItem article={article} key={index} />
+          ))}
+        </Grid>
+      </Container>
     </>
   )
 }

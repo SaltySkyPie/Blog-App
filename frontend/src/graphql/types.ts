@@ -23,6 +23,7 @@ export type Article = {
   content: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
+  imageUrl?: Maybe<Scalars['String']['output']>;
   perex: Scalars['String']['output'];
   state: ArticleState;
   title: Scalars['String']['output'];
@@ -40,6 +41,7 @@ export enum ArticleState {
 
 export type CreateArticleInput = {
   content: Scalars['String']['input'];
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   perex: Scalars['String']['input'];
   state?: ArticleState;
   title: Scalars['String']['input'];
@@ -85,6 +87,7 @@ export type Query = {
   article: Article;
   articles: Array<Article>;
   user: User;
+  userArticles: Array<Article>;
 };
 
 
@@ -100,6 +103,7 @@ export type QueryUserArgs = {
 export type UpdateArticleInput = {
   content?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
+  imageUrl?: InputMaybe<Scalars['String']['input']>;
   perex?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<ArticleState>;
   title?: InputMaybe<Scalars['String']['input']>;
@@ -127,7 +131,7 @@ export type User = {
 export type GetArticlesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetArticlesQuery = { __typename?: 'Query', articles: Array<{ __typename?: 'Article', id: string, title: string, perex: string }> };
+export type GetArticlesQuery = { __typename?: 'Query', articles: Array<{ __typename?: 'Article', id: string, title: string, perex: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string, middleName?: string | null } }> };
 
 
 export const GetArticlesDocument = gql`
@@ -136,6 +140,14 @@ export const GetArticlesDocument = gql`
     id
     title
     perex
+    createdAt
+    imageUrl
+    user {
+      id
+      firstName
+      lastName
+      middleName
+    }
   }
 }
     `;
