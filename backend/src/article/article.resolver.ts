@@ -23,6 +23,9 @@ export class ArticleResolver {
       where: {
         state: ArticleState.PUBLISHED,
       },
+      relations: {
+        user: true,
+      },
       order: {
         createdAt: 'DESC',
       },
