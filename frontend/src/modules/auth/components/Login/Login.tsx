@@ -119,7 +119,7 @@ const LoginForm: React.FC = () => {
                 error={!!formik.errors.password && !!formik.touched.password}
               />
 
-              <Button type="submit" fullWidth variant="contained" color="secondary" style={{ marginTop: 16 }}>
+              <Button type="submit" fullWidth variant="contained" style={{ marginTop: 16 }}>
                 {t('login')}
               </Button>
               <Typography

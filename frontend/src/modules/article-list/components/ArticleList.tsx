@@ -1,14 +1,13 @@
 import { useGetArticlesQuery } from '@app/graphql/types'
-import { Box, Container, Grid, Typography } from '@mui/material'
+import { Box, Container, Grid, LinearProgress, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import ArticleListItem from './ArticleListItem'
 
 const ArticleList = () => {
   const { t } = useTranslation()
-  const { data, loading, error } = useGetArticlesQuery()
+  const { data, loading } = useGetArticlesQuery()
 
-  if (loading) return <p>{t('loading')}</p>
-  if (error) return <p>{t('error')}</p>
+  if (loading) return <LinearProgress />
 
   const articles = data?.articles || []
 

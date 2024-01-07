@@ -20,7 +20,7 @@ export const settings: Page[] = [
   },
   {
     title: 'createArticle',
-    link: '/create-article',
+    link: '/article/create',
   },
   {
     title: 'myArticles',

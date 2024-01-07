@@ -29,4 +29,8 @@ export default defineConfig({
       '@app': path.resolve(__dirname, 'src'),
     },
   },
+  build: {
+    copyPublicDir: true,
+    sourcemap: true,
+  }
 })

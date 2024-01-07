@@ -29,7 +29,7 @@ async function getTokens(refreshToken: string): Promise<RefreshEndpointResponse>
 }
 
 const refreshApi = createRefresh({
-  interval: 10,
+  interval: 5,
   refreshApiCallback: async ({ refreshToken }): Promise<RefreshTokenCallbackResponse> => {
     try {
       if (!refreshToken) {

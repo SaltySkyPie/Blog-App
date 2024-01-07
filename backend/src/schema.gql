@@ -15,10 +15,8 @@ type Article {
 }
 
 enum ArticleState {
-  DELETED
   DRAFT
   HIDDEN
-  PRIVATE
   PUBLISHED
 }
 
@@ -26,7 +24,7 @@ input CreateArticleInput {
   content: String!
   imageUrl: String
   perex: String!
-  state: ArticleState! = DRAFT
+  state: ArticleState!
   title: String!
 }
 
@@ -47,6 +45,7 @@ type Query {
   article(id: ID!): Article!
   articles: [Article!]!
   user(id: Int!): User!
+  userArticle(id: ID!): Article!
   userArticles: [Article!]!
 }
 
@@ -55,7 +54,7 @@ input UpdateArticleInput {
   id: ID!
   imageUrl: String
   perex: String
-  state: ArticleState = DRAFT
+  state: ArticleState
   title: String
 }
 

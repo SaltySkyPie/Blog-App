@@ -1,0 +1,12 @@
+
+
+
+query getUserArticles {
+userArticles {
+    id
+    title
+    createdAt
+    updatedAt
+    state
+  }
+}

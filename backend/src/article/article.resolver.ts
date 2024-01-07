@@ -39,8 +39,13 @@ export class ArticleResolver {
   }
 
   @Query(() => [Article], { name: 'userArticles' })
-  async findUserArticles(@CurrentUser('id') userId: string) {
-    return await this.articleService.findUserArticles(userId)
+  async findUserArticles(@CurrentUser() user: JwtUser) {
+    return await this.articleService.findUserArticles(user.id)
+  }
+
+  @Query(() => Article, { name: 'userArticle' })
+  async findUserArticle(@Args('id', { type: () => ID }) id: string, @CurrentUser() user: JwtUser) {
+    return await this.articleService.findUserArticle(id, user.id)
   }
 
   @Mutation(() => Article)

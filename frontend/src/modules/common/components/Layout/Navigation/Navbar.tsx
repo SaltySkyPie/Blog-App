@@ -8,7 +8,7 @@ const Navbar: React.FC = () => {
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
   return (
-    <AppBar position="sticky">
+    <AppBar position="static" color="secondary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>{isSmallScreen ? <SmallScreenBox /> : <BigScreenBox />}</Toolbar>
       </Container>

@@ -6,9 +6,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 export enum ArticleState {
   DRAFT = 'draft',
   PUBLISHED = 'published',
-  PRIVATE = 'private',
   HIDDEN = 'hidden',
-  DELETED = 'deleted',
 }
 registerEnumType(ArticleState, {
   name: 'ArticleState',

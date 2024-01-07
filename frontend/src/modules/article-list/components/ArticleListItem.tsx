@@ -1,5 +1,5 @@
 import { GetArticlesQuery } from '@app/graphql/types'
-import { Avatar } from '@app/modules/common/components/Layout/Navigation/components/Avatar'
+import { Avatar } from '@app/modules/common/components/Misc/Avatar'
 import { StyledLink } from '@app/modules/common/components/Misc/Link.styled'
 import { Box, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
@@ -31,10 +31,10 @@ export default function ArticleListItem({ article }: { article: GetArticlesQuery
               md: 'auto',
             },
           }}
-          image={article.imageUrl ?? 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'}
+          image={(!article.imageUrl || !article.imageUrl.length) ? '/placeholder.webp' : article.imageUrl}
           alt={article.title}
         />
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
           <CardContent sx={{ flex: '1 0 auto' }}>
             <Typography variant="h4">{article.title}</Typography>
             <Typography
@@ -49,7 +49,7 @@ export default function ArticleListItem({ article }: { article: GetArticlesQuery
                 WebkitLineClamp: 3,
                 height: {
                   xs: 60,
-                  md: 75,
+                  md: 80,
                 },
               }}
             >
