@@ -14,7 +14,7 @@ export default function CreateArticle() {
 
   const [createArticle] = useCreateArticleMutation()
 
-    const [, { refetch }] = useGetUserArticlesLazyQuery()
+  const [, { refetch }] = useGetUserArticlesLazyQuery()
 
   const formik = useEditorEngineFormik()
 

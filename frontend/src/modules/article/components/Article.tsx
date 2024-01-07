@@ -2,7 +2,6 @@ import { useGetArticleLazyQuery } from '@app/graphql/types'
 import ArticleContainer from '@app/modules/common/components/Layout/Article/ArticleContainer'
 import ArticleItemContainer from '@app/modules/common/components/Layout/Article/ArticleItemContainer'
 import { Avatar } from '@app/modules/common/components/Misc/Avatar'
-import { StyledLink } from '@app/modules/common/components/Misc/Link.styled'
 import NotFoundPage from '@app/modules/common/components/Misc/NotFound'
 import Share from '@app/modules/common/components/Misc/Share'
 import { Box, Divider, LinearProgress, Typography } from '@mui/material'
@@ -59,30 +58,28 @@ export default function Article() {
       sideContent={
         <>
           <ArticleItemContainer>
-            <StyledLink to={`/profile/${article?.user.id}`}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Typography variant="h4">{t('writtenBy')}</Typography>
-                <Box sx={{ my: 2 }}>
-                  <Avatar
-                    name={authorName}
-                    sx={{
-                      width: '100px',
-                      height: '100px',
-                      fontSize: '50px',
-                    }}
-                  />
-                </Box>
-                <Typography variant="h5">{authorWithMiddleName}</Typography>
-                <Typography variant="caption">{date.toLocaleDateString()}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography variant="h4">{t('writtenBy')}</Typography>
+              <Box sx={{ my: 2 }}>
+                <Avatar
+                  name={authorName}
+                  sx={{
+                    width: '100px',
+                    height: '100px',
+                    fontSize: '50px',
+                  }}
+                />
               </Box>
-            </StyledLink>
+              <Typography variant="h5">{authorWithMiddleName}</Typography>
+              <Typography variant="caption">{date.toLocaleDateString()}</Typography>
+            </Box>
             <Divider sx={{ my: 2 }} />
             <Share url={window.location.href} />
           </ArticleItemContainer>

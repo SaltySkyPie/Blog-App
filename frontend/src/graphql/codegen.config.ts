@@ -15,11 +15,7 @@ const config: CodegenConfig = {
       presetConfig: {
         namingConvention: 'keep',
       },
-      plugins: [
-        'typescript',
-        'typescript-operations',
-        'typescript-react-apollo',
-      ],
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
     },
   },
 }

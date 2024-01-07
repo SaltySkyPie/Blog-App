@@ -1,12 +1,11 @@
-
 export interface TokenInfo {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    middleName?: string
-    iat: number
-    exp: number
+  id: string
+  username: string
+  firstName: string
+  lastName: string
+  middleName?: string
+  iat: number
+  exp: number
 }
 
 export function parseToken(jwt: string): TokenInfo {

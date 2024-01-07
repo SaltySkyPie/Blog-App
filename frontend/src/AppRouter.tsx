@@ -66,24 +66,6 @@ export default function AppRouter() {
         }
       />
       <Route
-        path="/profile"
-        element={
-          <RequireAuth loginPath={'/login'}>
-            <Suspense fallback={<LinearProgress />}>
-              <div>Profile</div>
-            </Suspense>
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/profile/:id"
-        element={
-          <Suspense fallback={<LinearProgress />}>
-            <div>Profile</div>
-          </Suspense>
-        }
-      />
-      <Route
         path="/article/create"
         element={
           <RequireAuth loginPath={'/login'}>
