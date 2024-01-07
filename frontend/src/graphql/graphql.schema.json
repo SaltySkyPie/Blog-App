@@ -168,12 +168,6 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "DELETED",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "DRAFT",
             "description": null,
             "isDeprecated": false,
@@ -181,12 +175,6 @@
           },
           {
             "name": "HIDDEN",
-            "description": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "PRIVATE",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -272,7 +260,7 @@
                 "ofType": null
               }
             },
-            "defaultValue": "DRAFT",
+            "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -615,6 +603,39 @@
             "deprecationReason": null
           },
           {
+            "name": "userArticle",
+            "description": null,
+            "args": [
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Article",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "userArticles",
             "description": null,
             "args": [],
@@ -720,7 +741,7 @@
               "name": "ArticleState",
               "ofType": null
             },
-            "defaultValue": "DRAFT",
+            "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
           },
