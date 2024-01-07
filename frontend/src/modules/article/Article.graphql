@@ -1,0 +1,21 @@
+
+
+
+
+
+query getArticle($id: ID!) {
+article(id: $id) {
+    id
+    title
+    perex
+    createdAt
+    imageUrl
+    content
+    user {
+      id
+      firstName
+      lastName
+      middleName
+    }
+  }
+}

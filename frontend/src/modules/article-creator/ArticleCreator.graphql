@@ -1,0 +1,29 @@
+
+
+
+mutation createArticle ($input: CreateArticleInput!) {
+  createArticle(createArticleInput: $input) {
+    id
+    state
+  }
+}
+
+mutation updateArticle ($input: UpdateArticleInput!) {
+  updateArticle(updateArticleInput: $input) {
+    id
+    state
+  }
+}
+
+
+
+query getUserArticle($id: ID!) {
+  userArticle(id: $id) {
+    id
+    title
+    perex
+    createdAt
+    imageUrl
+    content
+  }
+}
