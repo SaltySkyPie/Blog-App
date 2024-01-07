@@ -39,11 +39,17 @@ export class ArticleService {
         id,
         state: ArticleState.PUBLISHED || ArticleState.HIDDEN,
       },
+      relations: {
+        user: true,
+      },
     })
   }
 
   findUserArticles(userId: string) {
     return this.articleRepository.find({
+      relations: {
+        user: true,
+      },
       where: {
         user: {
           id: userId,
@@ -52,20 +58,31 @@ export class ArticleService {
     })
   }
 
-  findUserArticle(id: string, userId: string) {
-    return this.articleRepository.findOneOrFail({
+  async findUserArticle(id: string, userId: string) {
+    const article = await this.articleRepository.findOneOrFail({
+      relations: {
+        user: true,
+      },
       where: {
-        id,
-        user: {
-          id: userId,
-        },
+        id: id,
       },
     })
+
+    console.log('userId', userId)
+    console.log('article.user.id', article.user.id)
+
+    if (article.user.id !== userId) {
+      throw new Error('You are not the owner of this article')
+    }
+    return article
   }
 
   async update(id: string, updateArticleInput: UpdateArticleInput, user: JwtUser) {
     const article = await this.articleRepository.findOneOrFail({
       where: { id },
+      relations: {
+        user: true,
+      },
     })
     if (article.user.id !== user.id) {
       throw new Error('You are not the owner of this article')
@@ -91,6 +108,7 @@ export class ArticleService {
     article.perex = input.perex ?? article.perex
     article.content = input.content ?? article.content
     article.imageUrl = input.imageUrl ?? article.imageUrl
+    article.state = input.state ?? article.state
     return article
   }
 }
