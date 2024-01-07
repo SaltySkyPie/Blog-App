@@ -33,7 +33,7 @@ export const BigScreenBox = () => {
         <FlexBox>
           {pages.map((page) => (
             <Link to={page.link} key={page.link}>
-              <Button variant='text'>{t(page.title)}</Button>
+              <Button variant="text">{t(page.title)}</Button>
             </Link>
           ))}
         </FlexBox>

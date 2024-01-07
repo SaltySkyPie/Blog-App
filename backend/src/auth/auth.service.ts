@@ -30,7 +30,6 @@ export class AuthService {
 
   async register(userData: CreateUserInput) {
     try {
-
       const hashedPassword = await this.hashData(userData.password)
       const user = await this.usersService.create({
         ...userData,
@@ -38,10 +37,10 @@ export class AuthService {
       })
       return this.login(user)
     } catch (e) {
-       if (e.message.includes('Username is already taken')) {
-         throw new HttpException(e.message, HttpStatus.CONFLICT)
-       }
-       throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
+      if (e.message.includes('Username is already taken')) {
+        throw new HttpException(e.message, HttpStatus.CONFLICT)
+      }
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
     }
   }
 

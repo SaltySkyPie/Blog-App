@@ -15,10 +15,6 @@ export const pages: Page[] = [
 ]
 export const settings: Page[] = [
   {
-    title: 'profile',
-    link: '/profile',
-  },
-  {
     title: 'createArticle',
     link: '/article/create',
   },

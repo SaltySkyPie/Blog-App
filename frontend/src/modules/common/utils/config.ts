@@ -1,12 +1,12 @@
 export type AppConfig = {
-    graphql: {
-        url: string
-        ws: string
-    }
-    rest: {
-        url: string
-    }
-    }
+  graphql: {
+    url: string
+    ws: string
+  }
+  rest: {
+    url: string
+  }
+}
 
 export const appConfig: AppConfig = {
   graphql: {

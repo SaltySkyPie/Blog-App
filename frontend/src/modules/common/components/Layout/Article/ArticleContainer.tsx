@@ -6,7 +6,7 @@ export default function ArticleContainer({
   sideContent,
   title,
   spacing,
-  subContentSpacing
+  subContentSpacing,
 }: {
   mainContent: React.ReactNode
   sideContent: React.ReactNode

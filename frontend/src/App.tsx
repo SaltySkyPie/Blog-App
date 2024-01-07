@@ -11,9 +11,9 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { Suspense } from 'react'
 import AppRouter from './AppRouter'
+import { AuthProvider } from './modules/auth/components/Provider/AuthProvider'
 import { PageLayout } from './modules/common/components/Layout/Layout'
 import { ApolloAppProvider } from './modules/common/utils/apollo'
-import { AuthProvider } from './modules/auth/components/Provider/AuthProvider'
 
 /* --- CONSTANTS and FUNCTIONS --- */
 import { initI18next } from './modules/common/utils/i18next'
@@ -26,18 +26,18 @@ void initI18next()
 function App() {
   return (
     <>
-    <AuthProvider>
-      <ApolloAppProvider>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <PageLayout>
-            <Suspense fallback={<></>}>
-              <AppRouter />
-            </Suspense>
-          </PageLayout>
-        </ThemeProvider>
-      </ApolloAppProvider>
-    </AuthProvider>
+      <AuthProvider>
+        <ApolloAppProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <PageLayout>
+              <Suspense fallback={<></>}>
+                <AppRouter />
+              </Suspense>
+            </PageLayout>
+          </ThemeProvider>
+        </ApolloAppProvider>
+      </AuthProvider>
     </>
   )
 }

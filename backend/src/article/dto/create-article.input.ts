@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql'
-import { ArticleState } from '../entities/article.entity'
 import { Length } from 'class-validator'
+import { ArticleState } from '../entities/article.entity'
 
 @InputType()
 export class CreateArticleInput {
@@ -16,7 +16,7 @@ export class CreateArticleInput {
   @Field()
   content: string
 
-  @Field({ nullable: true})
+  @Field({ nullable: true })
   imageUrl?: string
 
   @Field(() => ArticleState)
