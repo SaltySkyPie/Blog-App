@@ -1,12 +1,12 @@
 import { Button, styled } from '@mui/material'
 import Box from '@mui/material/Box'
 import { t } from 'i18next'
+import { useNavigate } from 'react-router-dom'
+import { StyledLink as Link } from '../../../Misc/Link.styled'
 import { pages } from '../pages'
 import Logo from './Logo'
-import UserMenu from './UserMenu'
-import { StyledLink as Link } from '../../../Misc/Link.styled'
-import { useNavigate } from 'react-router-dom'
 import MobileNavMenu from './MobileMenu'
+import UserMenu from './UserMenu'
 
 export const FlexBox = styled(Box)`
   display: flex;
@@ -14,7 +14,7 @@ export const FlexBox = styled(Box)`
 `
 
 export const BigScreenBox = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   return (
     <FlexBox
       sx={{
@@ -33,7 +33,7 @@ export const BigScreenBox = () => {
         <FlexBox>
           {pages.map((page) => (
             <Link to={page.link} key={page.link}>
-              <Button>{t(page.title)}</Button>
+              <Button variant='text'>{t(page.title)}</Button>
             </Link>
           ))}
         </FlexBox>
@@ -51,6 +51,7 @@ export const BigScreenBox = () => {
 }
 
 export const SmallScreenBox = () => {
+  const navigate = useNavigate()
   return (
     <FlexBox
       sx={{
@@ -64,6 +65,9 @@ export const SmallScreenBox = () => {
         sx={{
           width: '80%',
           justifyContent: 'center',
+        }}
+        onClick={() => {
+          navigate('/')
         }}
       >
         <Logo />

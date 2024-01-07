@@ -223,7 +223,7 @@ const RegistrationForm: React.FC = () => {
                 error={!!formik.errors.passwordConfirmation && !!formik.touched.passwordConfirmation}
               />
 
-              <Button type="submit" fullWidth variant="contained" color="secondary" style={{ marginTop: 16 }}>
+              <Button type="submit" fullWidth variant="contained" style={{ marginTop: 16 }}>
                 {t('register')}
               </Button>
               <Typography

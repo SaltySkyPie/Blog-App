@@ -9,8 +9,8 @@ import { useState } from 'react'
 import { useSignOut } from 'react-auth-kit'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { Avatar } from '../../../Misc/Avatar'
 import { StyledLink as Link } from '../../../Misc/Link.styled'
-import { Avatar } from '../components/Avatar'
 import { settings } from '../pages'
 
 const UserMenu = ({ isSmallScreen }: { isSmallScreen: boolean }) => {
@@ -47,6 +47,7 @@ const UserMenu = ({ isSmallScreen }: { isSmallScreen: boolean }) => {
               color: 'inherit',
               textDecoration: 'none',
               cursor: 'pointer',
+              fontWeight: 'bold',
             }}
           >
             {user.firstName}
