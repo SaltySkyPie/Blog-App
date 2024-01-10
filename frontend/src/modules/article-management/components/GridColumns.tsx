@@ -50,7 +50,7 @@ const useArticleManagementColumns = () => {
         type: 'actions',
         getActions: (params) => {
           return [
-            <GridActionsCellItem icon={<Save />} label={t('save')} onClick={() => {}} />,
+            <GridActionsCellItem icon={<Save />} label={t('save')}/>,
             <GridActionsCellItem
               icon={<Edit />}
               label={t('edit')}

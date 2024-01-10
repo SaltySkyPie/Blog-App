@@ -5,6 +5,9 @@ mutation createArticle ($input: CreateArticleInput!) {
   createArticle(createArticleInput: $input) {
     id
     state
+    createdAt
+    updatedAt
+    title
   }
 }
 
@@ -12,6 +15,9 @@ mutation updateArticle ($input: UpdateArticleInput!) {
   updateArticle(updateArticleInput: $input) {
     id
     state
+    createdAt
+    updatedAt
+    title
   }
 }
 

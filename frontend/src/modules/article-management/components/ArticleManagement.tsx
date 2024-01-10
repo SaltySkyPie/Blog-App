@@ -8,7 +8,7 @@ import useArticleManagementColumns from './GridColumns'
 
 const ArticleList = () => {
   const { t } = useTranslation()
-  const { data, loading } = useGetUserArticlesQuery()
+  const { data, loading} = useGetUserArticlesQuery()
   const { columns } = useArticleManagementColumns()
   const navigate = useNavigate()
   const [updateArticle] = useUpdateArticleMutation()
@@ -30,7 +30,7 @@ const ArticleList = () => {
             variant="contained"
             color="primary"
             onClick={() => {
-              navigate('/create-article')
+              navigate('/article/create')
             }}
           >
             {t('createArticle')}
@@ -42,8 +42,9 @@ const ArticleList = () => {
           rowSelection={false}
           processRowUpdate={async (newRow: GridValidRowModel, oldRow: GridValidRowModel) => {
             const { id, title, state } = newRow
+            if (!id || !title || !state) return oldRow
             try {
-              const { errors } = await updateArticle({
+              const {data: newArticle, errors } = await updateArticle({
                 variables: {
                   input: {
                     id,
@@ -52,6 +53,11 @@ const ArticleList = () => {
                   },
                 },
               })
+              newRow = {
+                ...oldRow,
+                ...newRow,
+                ...newArticle?.updateArticle,
+              }
               if (errors) {
                 const errorMessages = errors.map((error) => error.message).join(', ')
                 toast.error(t('errorSavingArticle') + ': ' + errorMessages)
@@ -63,6 +69,7 @@ const ArticleList = () => {
               else toast.error(t('errorSavingArticle'))
               return oldRow
             }
+            toast.success(t('articleSaved'))
             return newRow
           }}
         />
