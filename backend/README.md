@@ -52,7 +52,7 @@ $ npm run migration:create <path to to be generated migration file>
 # example: npm run migration:create ./migrations/initial
 ```
 
-Migrations are automatically run on application start. If you want to run them manually, use:
+Migrations are automatically executed on application start. If you want to run them manually, use:
 
 ```bash
 # run migrations

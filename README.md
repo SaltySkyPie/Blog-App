@@ -10,7 +10,7 @@ Installation instructions are available in the README.md files in the backend an
 ## Local Development
 
 For local development you need to run both the backend and frontend (in dev mode for best developer experience). Instructions are available in the README.md files in the backend and frontend directories.
-Local database development is available in the README.md file of environment directory.
+Local database development environment is available in the README.md file of environment directory.
 
 ## Deployment
 
