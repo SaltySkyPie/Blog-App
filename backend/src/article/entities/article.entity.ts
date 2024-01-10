@@ -1,7 +1,17 @@
+import { Comment } from '@app/comment/entities/comment.entity'
 import { User } from '@app/user/entities/user.entity'
 import { RandomGenerator } from '@app/utils/generator'
 import { Field, GraphQLISODateTime, ID, ObjectType, registerEnumType } from '@nestjs/graphql'
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 export enum ArticleState {
   DRAFT = 'draft',
@@ -68,4 +78,12 @@ export class Article {
   })
   @Field(() => User)
   user: User
+
+  @OneToMany(() => Comment, (comment) => comment.article, {
+    cascade: true,
+    orphanedRowAction: 'delete',
+    onDelete: 'CASCADE',
+  })
+  @Field(() => [Comment])
+  comments: Comment[]
 }
