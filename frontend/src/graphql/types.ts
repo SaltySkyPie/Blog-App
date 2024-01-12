@@ -20,6 +20,7 @@ export type Scalars = {
 
 export type Article = {
   __typename?: 'Article';
+  comments?: Maybe<Array<Comment>>;
   content: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
@@ -37,6 +38,18 @@ export enum ArticleState {
   Published = 'PUBLISHED'
 }
 
+export type Comment = {
+  __typename?: 'Comment';
+  article: Article;
+  content: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
+  voteTypeCounts: Array<VoteTypeCount>;
+  votes?: Maybe<Array<Vote>>;
+};
+
 export type CreateArticleInput = {
   content: Scalars['String']['input'];
   imageUrl?: InputMaybe<Scalars['String']['input']>;
@@ -45,13 +58,28 @@ export type CreateArticleInput = {
   title: Scalars['String']['input'];
 };
 
+export type CreateCommentInput = {
+  articleId: Scalars['ID']['input'];
+  content: Scalars['String']['input'];
+};
+
+export type CreateVoteInput = {
+  commentId: Scalars['ID']['input'];
+  type: VoteType;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   changeState: Article;
   createArticle: Article;
+  createComment: Comment;
+  createVote: Vote;
   removeArticle: Scalars['Boolean']['output'];
+  removeComment: Scalars['Boolean']['output'];
+  removeVote: Scalars['Boolean']['output'];
   updateArticle: Article;
-  updateUser: User;
+  updateComment: Comment;
+  updateVote: Vote;
 };
 
 
@@ -66,8 +94,28 @@ export type MutationCreateArticleArgs = {
 };
 
 
+export type MutationCreateCommentArgs = {
+  createCommentInput: CreateCommentInput;
+};
+
+
+export type MutationCreateVoteArgs = {
+  createVoteInput: CreateVoteInput;
+};
+
+
 export type MutationRemoveArticleArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type MutationRemoveCommentArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationRemoveVoteArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -76,13 +124,19 @@ export type MutationUpdateArticleArgs = {
 };
 
 
-export type MutationUpdateUserArgs = {
-  updateUserInput: UpdateUserInput;
+export type MutationUpdateCommentArgs = {
+  updateCommentInput: UpdateCommentInput;
+};
+
+
+export type MutationUpdateVoteArgs = {
+  updateVoteInput: UpdateVoteInput;
 };
 
 export type Query = {
   __typename?: 'Query';
   article: Article;
+  articleComments: Array<Comment>;
   articles: Array<Article>;
   user: User;
   userArticle: Article;
@@ -92,6 +146,19 @@ export type Query = {
 
 export type QueryArticleArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryArticleCommentsArgs = {
+  articleId: Scalars['ID']['input'];
+  skip?: InputMaybe<Scalars['Float']['input']>;
+  take?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryArticlesArgs = {
+  skip?: InputMaybe<Scalars['Float']['input']>;
+  take?: InputMaybe<Scalars['Float']['input']>;
 };
 
 
@@ -113,23 +180,50 @@ export type UpdateArticleInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateUserInput = {
-  firstName?: InputMaybe<Scalars['String']['input']>;
+export type UpdateCommentInput = {
+  articleId?: InputMaybe<Scalars['ID']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  middleName?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  username?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateVoteInput = {
+  commentId?: InputMaybe<Scalars['ID']['input']>;
+  id: Scalars['ID']['input'];
+  type?: InputMaybe<VoteType>;
 };
 
 export type User = {
   __typename?: 'User';
-  articles: Array<Article>;
+  articles?: Maybe<Array<Article>>;
+  comments?: Maybe<Array<Comment>>;
+  createdAt: Scalars['DateTime']['output'];
   firstName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   lastName: Scalars['String']['output'];
   middleName?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
   username: Scalars['String']['output'];
+};
+
+export type Vote = {
+  __typename?: 'Vote';
+  comment: Comment;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  type: VoteType;
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
+};
+
+export enum VoteType {
+  Down = 'DOWN',
+  Up = 'UP'
+}
+
+export type VoteTypeCount = {
+  __typename?: 'VoteTypeCount';
+  count: Scalars['Int']['output'];
+  type: VoteType;
 };
 
 export type CreateArticleMutationVariables = Exact<{
@@ -137,14 +231,14 @@ export type CreateArticleMutationVariables = Exact<{
 }>;
 
 
-export type CreateArticleMutation = { __typename?: 'Mutation', createArticle: { __typename?: 'Article', id: string, state: ArticleState } };
+export type CreateArticleMutation = { __typename?: 'Mutation', createArticle: { __typename?: 'Article', id: string, state: ArticleState, createdAt: any, updatedAt: any, title: string } };
 
 export type UpdateArticleMutationVariables = Exact<{
   input: UpdateArticleInput;
 }>;
 
 
-export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle: { __typename?: 'Article', id: string, state: ArticleState } };
+export type UpdateArticleMutation = { __typename?: 'Mutation', updateArticle: { __typename?: 'Article', id: string, state: ArticleState, createdAt: any, updatedAt: any, title: string } };
 
 export type GetUserArticleQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -176,6 +270,9 @@ export const CreateArticleDocument = gql`
   createArticle(createArticleInput: $input) {
     id
     state
+    createdAt
+    updatedAt
+    title
   }
 }
     `;
@@ -210,6 +307,9 @@ export const UpdateArticleDocument = gql`
   updateArticle(updateArticleInput: $input) {
     id
     state
+    createdAt
+    updatedAt
+    title
   }
 }
     `;

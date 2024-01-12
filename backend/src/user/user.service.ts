@@ -5,7 +5,10 @@ import { CreateUserInput } from './dto/create-user.input'
 import { UpdateUserInput } from './dto/update-user.input'
 import { User } from './entities/user.entity'
 
-export type JwtUser = Omit<Omit<User, 'password'>, 'articles'>
+export type JwtUser = Pick<
+  User,
+  Exclude<keyof User, 'password' | 'articles' | 'createdAt' | 'updatedAt' | 'articles' | 'comments'>
+>
 
 @Injectable()
 export class UserService {

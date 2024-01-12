@@ -1,7 +1,8 @@
-import { Comment } from '@app/comment/entities/comment.entity'
+import { Article } from '@app/article/entities/article.entity'
 import { User } from '@app/user/entities/user.entity'
 import { RandomGenerator } from '@app/utils/generator'
-import { Field, GraphQLISODateTime, ID, ObjectType, registerEnumType } from '@nestjs/graphql'
+import { Vote, VoteTypeCount } from '@app/vote/entities/vote.entity'
+import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql'
 import {
   Column,
   CreateDateColumn,
@@ -13,41 +14,16 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 
-export enum ArticleState {
-  DRAFT = 'draft',
-  PUBLISHED = 'published',
-  HIDDEN = 'hidden',
-}
-registerEnumType(ArticleState, {
-  name: 'ArticleState',
-})
-
-@Entity()
 @ObjectType()
-export class Article {
+@Entity()
+export class Comment {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   id: string = RandomGenerator.uuid()
 
   @Field()
-  @Column({
-    length: 255,
-  })
-  title: string
-
-  @Field()
   @Column('text')
-  perex: string
-
-  @Field()
-  @Column('longtext')
   content: string
-
-  @Field({ nullable: true })
-  @Column('text', {
-    nullable: true,
-  })
-  imageUrl?: string
 
   @CreateDateColumn({
     name: 'createdAt',
@@ -61,19 +37,10 @@ export class Article {
   @Field(() => GraphQLISODateTime)
   updatedAt: Date
 
-  @Field(() => ArticleState)
-  @Column({
-    type: 'enum',
-    enum: ArticleState,
-    default: ArticleState.DRAFT,
-  })
-  state: ArticleState
-
   @ManyToOne(() => User, {
     orphanedRowAction: 'delete',
     onDelete: 'CASCADE',
     eager: true,
-    nullable: false,
   })
   @JoinColumn({
     name: 'userId',
@@ -81,11 +48,25 @@ export class Article {
   @Field(() => User)
   user: User
 
-  @OneToMany(() => Comment, (comment) => comment.article, {
+  @ManyToOne(() => Article, {
+    orphanedRowAction: 'delete',
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  @JoinColumn({
+    name: 'articleId',
+  })
+  @Field(() => Article)
+  article: Article
+
+  @Field(() => [Vote], { nullable: true })
+  @OneToMany(() => Vote, (vote) => vote.comment, {
     cascade: true,
     orphanedRowAction: 'delete',
     onDelete: 'CASCADE',
   })
-  @Field(() => [Comment], { nullable: true })
-  comments: Comment[]
+  votes: Vote[]
+
+  @Field(() => [VoteTypeCount])
+  voteTypeCounts: VoteTypeCount[]
 }

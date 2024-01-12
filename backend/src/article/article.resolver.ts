@@ -18,18 +18,8 @@ export class ArticleResolver {
 
   @Query(() => [Article], { name: 'articles' })
   @Public()
-  async findAll() {
-    return await this.articleService.findAll({
-      where: {
-        state: ArticleState.PUBLISHED,
-      },
-      relations: {
-        user: true,
-      },
-      order: {
-        createdAt: 'DESC',
-      },
-    })
+  async findAll(@Args('skip', { nullable: true }) skip?: number, @Args('take', { nullable: true }) take?: number) {
+    return await this.articleService.findAllPublic()
   }
 
   @Query(() => Article, { name: 'article' })

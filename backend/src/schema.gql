@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 
 type Article {
+  comments: [Comment!]
   content: String!
   createdAt: DateTime!
   id: ID!
@@ -20,12 +21,33 @@ enum ArticleState {
   PUBLISHED
 }
 
+type Comment {
+  article: Article!
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  updatedAt: DateTime!
+  user: User!
+  voteTypeCounts: [VoteTypeCount!]!
+  votes: [Vote!]
+}
+
 input CreateArticleInput {
   content: String!
   imageUrl: String
   perex: String!
   state: ArticleState!
   title: String!
+}
+
+input CreateCommentInput {
+  articleId: ID!
+  content: String!
+}
+
+input CreateVoteInput {
+  commentId: ID!
+  type: VoteType!
 }
 
 """
@@ -36,14 +58,20 @@ scalar DateTime
 type Mutation {
   changeState(id: ID!, state: ArticleState!): Article!
   createArticle(createArticleInput: CreateArticleInput!): Article!
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  createVote(createVoteInput: CreateVoteInput!): Vote!
   removeArticle(id: Int!): Boolean!
+  removeComment(id: ID!): Boolean!
+  removeVote(id: ID!): Boolean!
   updateArticle(updateArticleInput: UpdateArticleInput!): Article!
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  updateVote(updateVoteInput: UpdateVoteInput!): Vote!
 }
 
 type Query {
   article(id: ID!): Article!
-  articles: [Article!]!
+  articleComments(articleId: ID!, skip: Float, take: Float): [Comment!]!
+  articles(skip: Float, take: Float): [Article!]!
   user(id: Int!): User!
   userArticle(id: ID!): Article!
   userArticles: [Article!]!
@@ -58,20 +86,45 @@ input UpdateArticleInput {
   title: String
 }
 
-input UpdateUserInput {
-  firstName: String
+input UpdateCommentInput {
+  articleId: ID
+  content: String
   id: ID!
-  lastName: String
-  middleName: String
-  password: String
-  username: String
+}
+
+input UpdateVoteInput {
+  commentId: ID
+  id: ID!
+  type: VoteType
 }
 
 type User {
-  articles: [Article!]!
+  articles: [Article!]
+  comments: [Comment!]
+  createdAt: DateTime!
   firstName: String!
   id: ID!
   lastName: String!
   middleName: String
+  updatedAt: DateTime!
   username: String!
+}
+
+type Vote {
+  comment: Comment!
+  createdAt: DateTime!
+  id: ID!
+  type: VoteType!
+  updatedAt: DateTime!
+  user: User!
+}
+
+enum VoteType {
+  DOWN
+  UP
+}
+
+type VoteTypeCount {
+  count: Int!
+  type: VoteType!
 }

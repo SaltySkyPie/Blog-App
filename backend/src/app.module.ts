@@ -10,7 +10,9 @@ import { AppService } from './app.service'
 import { ArticleModule } from './article/article.module'
 import { AuthModule } from './auth/auth.module'
 import { AccessTokenAuthGuard } from './auth/guards/access-token.guard'
+import { CommentModule } from './comment/comment.module'
 import { UserModule } from './user/user.module'
+import { VoteModule } from './vote/vote.module'
 
 @Module({
   imports: [
@@ -42,6 +44,8 @@ import { UserModule } from './user/user.module'
     ArticleModule,
     UserModule,
     AuthModule,
+    CommentModule,
+    VoteModule,
   ],
   controllers: [AppController],
   providers: [
