@@ -1,35 +1,27 @@
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { Args, ID, Mutation, Resolver } from '@nestjs/graphql'
 import { CreateVoteInput } from './dto/create-vote.input'
 import { UpdateVoteInput } from './dto/update-vote.input'
 import { Vote } from './entities/vote.entity'
 import { VoteService } from './vote.service'
+import { CurrentUser } from '@app/auth/decorators/current-user.decorator'
+import { JwtUser } from '@app/user/user.service'
 
 @Resolver(() => Vote)
 export class VoteResolver {
   constructor(private readonly voteService: VoteService) {}
 
   @Mutation(() => Vote)
-  createVote(@Args('createVoteInput') createVoteInput: CreateVoteInput) {
-    return this.voteService.create(createVoteInput)
-  }
-
-  @Query(() => [Vote], { name: 'vote' })
-  findAll() {
-    return this.voteService.findAll()
-  }
-
-  @Query(() => Vote, { name: 'vote' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.voteService.findOne(id)
+  createVote(@Args('createVoteInput') createVoteInput: CreateVoteInput, @CurrentUser() user: JwtUser) {
+    return this.voteService.create(createVoteInput, user)
   }
 
   @Mutation(() => Vote)
-  updateVote(@Args('updateVoteInput') updateVoteInput: UpdateVoteInput) {
-    return this.voteService.update(updateVoteInput.id, updateVoteInput)
+  updateVote(@Args('updateVoteInput') updateVoteInput: UpdateVoteInput, @CurrentUser() user: JwtUser) {
+    return this.voteService.update(updateVoteInput.id, updateVoteInput, user)
   }
 
-  @Mutation(() => Vote)
-  removeVote(@Args('id', { type: () => Int }) id: number) {
-    return this.voteService.remove(id)
+  @Mutation(() => Boolean)
+  removeVote(@Args('id', { type: () => ID }) id: string, @CurrentUser() user: JwtUser) {
+    return this.voteService.remove(id, user)
   }
 }

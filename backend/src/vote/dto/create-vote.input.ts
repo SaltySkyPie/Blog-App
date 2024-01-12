@@ -1,7 +1,11 @@
-import { Field, InputType, Int } from '@nestjs/graphql'
+import { VoteType } from '@app/vote/entities/vote.entity'
+import { Field, ID, InputType } from '@nestjs/graphql'
 
 @InputType()
 export class CreateVoteInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number
+  @Field(() => VoteType)
+  type: VoteType
+
+  @Field(() => ID)
+  commentId: string
 }
