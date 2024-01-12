@@ -72,6 +72,8 @@ export class Article {
   @ManyToOne(() => User, {
     orphanedRowAction: 'delete',
     onDelete: 'CASCADE',
+    eager: true,
+    nullable: false,
   })
   @JoinColumn({
     name: 'userId',
@@ -84,6 +86,6 @@ export class Article {
     orphanedRowAction: 'delete',
     onDelete: 'CASCADE',
   })
-  @Field(() => [Comment])
+  @Field(() => [Comment], { nullable: true })
   comments: Comment[]
 }
