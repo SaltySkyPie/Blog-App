@@ -20,7 +20,7 @@ export type Scalars = {
 
 export type Article = {
   __typename?: 'Article';
-  comments: Array<Comment>;
+  comments?: Maybe<Array<Comment>>;
   content: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
@@ -46,6 +46,8 @@ export type Comment = {
   id: Scalars['ID']['output'];
   updatedAt: Scalars['DateTime']['output'];
   user: User;
+  voteTypeCounts: Array<VoteTypeCount>;
+  votes?: Maybe<Array<Vote>>;
 };
 
 export type CreateArticleInput = {
@@ -57,13 +59,13 @@ export type CreateArticleInput = {
 };
 
 export type CreateCommentInput = {
-  /** Example field (placeholder) */
-  exampleField: Scalars['Int']['input'];
+  articleId: Scalars['ID']['input'];
+  content: Scalars['String']['input'];
 };
 
 export type CreateVoteInput = {
-  /** Example field (placeholder) */
-  exampleField: Scalars['Int']['input'];
+  commentId: Scalars['ID']['input'];
+  type: VoteType;
 };
 
 export type Mutation = {
@@ -73,11 +75,10 @@ export type Mutation = {
   createComment: Comment;
   createVote: Vote;
   removeArticle: Scalars['Boolean']['output'];
-  removeComment: Comment;
-  removeVote: Vote;
+  removeComment: Scalars['Boolean']['output'];
+  removeVote: Scalars['Boolean']['output'];
   updateArticle: Article;
   updateComment: Comment;
-  updateUser: User;
   updateVote: Vote;
 };
 
@@ -109,12 +110,12 @@ export type MutationRemoveArticleArgs = {
 
 
 export type MutationRemoveCommentArgs = {
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationRemoveVoteArgs = {
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
 
@@ -128,11 +129,6 @@ export type MutationUpdateCommentArgs = {
 };
 
 
-export type MutationUpdateUserArgs = {
-  updateUserInput: UpdateUserInput;
-};
-
-
 export type MutationUpdateVoteArgs = {
   updateVoteInput: UpdateVoteInput;
 };
@@ -140,12 +136,11 @@ export type MutationUpdateVoteArgs = {
 export type Query = {
   __typename?: 'Query';
   article: Article;
+  articleComments: Array<Comment>;
   articles: Array<Article>;
-  comment: Comment;
   user: User;
   userArticle: Article;
   userArticles: Array<Article>;
-  vote: Vote;
 };
 
 
@@ -154,8 +149,16 @@ export type QueryArticleArgs = {
 };
 
 
-export type QueryCommentArgs = {
-  id: Scalars['Int']['input'];
+export type QueryArticleCommentsArgs = {
+  articleId: Scalars['ID']['input'];
+  skip?: InputMaybe<Scalars['Float']['input']>;
+  take?: InputMaybe<Scalars['Float']['input']>;
+};
+
+
+export type QueryArticlesArgs = {
+  skip?: InputMaybe<Scalars['Float']['input']>;
+  take?: InputMaybe<Scalars['Float']['input']>;
 };
 
 
@@ -168,11 +171,6 @@ export type QueryUserArticleArgs = {
   id: Scalars['ID']['input'];
 };
 
-
-export type QueryVoteArgs = {
-  id: Scalars['Int']['input'];
-};
-
 export type UpdateArticleInput = {
   content?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
@@ -183,30 +181,21 @@ export type UpdateArticleInput = {
 };
 
 export type UpdateCommentInput = {
-  /** Example field (placeholder) */
-  exampleField?: InputMaybe<Scalars['Int']['input']>;
-  id: Scalars['Int']['input'];
-};
-
-export type UpdateUserInput = {
-  firstName?: InputMaybe<Scalars['String']['input']>;
+  articleId?: InputMaybe<Scalars['ID']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  lastName?: InputMaybe<Scalars['String']['input']>;
-  middleName?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateVoteInput = {
-  /** Example field (placeholder) */
-  exampleField?: InputMaybe<Scalars['Int']['input']>;
-  id: Scalars['Int']['input'];
+  commentId?: InputMaybe<Scalars['ID']['input']>;
+  id: Scalars['ID']['input'];
+  type?: InputMaybe<VoteType>;
 };
 
 export type User = {
   __typename?: 'User';
-  articles: Array<Article>;
-  comments: Array<Comment>;
+  articles?: Maybe<Array<Article>>;
+  comments?: Maybe<Array<Comment>>;
   createdAt: Scalars['DateTime']['output'];
   firstName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -218,7 +207,23 @@ export type User = {
 
 export type Vote = {
   __typename?: 'Vote';
+  comment: Comment;
+  createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
+  type: VoteType;
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
+};
+
+export enum VoteType {
+  Down = 'DOWN',
+  Up = 'UP'
+}
+
+export type VoteTypeCount = {
+  __typename?: 'VoteTypeCount';
+  count: Scalars['Int']['output'];
+  type: VoteType;
 };
 
 export type CreateArticleMutationVariables = Exact<{

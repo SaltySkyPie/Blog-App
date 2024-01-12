@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Article {
-  comments: [Comment!]!
+  comments: [Comment!]
   content: String!
   createdAt: DateTime!
   id: ID!
@@ -28,6 +28,8 @@ type Comment {
   id: ID!
   updatedAt: DateTime!
   user: User!
+  voteTypeCounts: [VoteTypeCount!]!
+  votes: [Vote!]
 }
 
 input CreateArticleInput {
@@ -39,13 +41,13 @@ input CreateArticleInput {
 }
 
 input CreateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  articleId: ID!
+  content: String!
 }
 
 input CreateVoteInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  commentId: ID!
+  type: VoteType!
 }
 
 """
@@ -59,22 +61,20 @@ type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   createVote(createVoteInput: CreateVoteInput!): Vote!
   removeArticle(id: Int!): Boolean!
-  removeComment(id: Int!): Comment!
-  removeVote(id: Int!): Vote!
+  removeComment(id: ID!): Boolean!
+  removeVote(id: ID!): Boolean!
   updateArticle(updateArticleInput: UpdateArticleInput!): Article!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
-  updateUser(updateUserInput: UpdateUserInput!): User!
   updateVote(updateVoteInput: UpdateVoteInput!): Vote!
 }
 
 type Query {
   article(id: ID!): Article!
-  articles: [Article!]!
-  comment(id: Int!): Comment!
+  articleComments(articleId: ID!, skip: Float, take: Float): [Comment!]!
+  articles(skip: Float, take: Float): [Article!]!
   user(id: Int!): User!
   userArticle(id: ID!): Article!
   userArticles: [Article!]!
-  vote(id: Int!): Vote!
 }
 
 input UpdateArticleInput {
@@ -87,29 +87,20 @@ input UpdateArticleInput {
 }
 
 input UpdateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input UpdateUserInput {
-  firstName: String
+  articleId: ID
+  content: String
   id: ID!
-  lastName: String
-  middleName: String
-  password: String
-  username: String
 }
 
 input UpdateVoteInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  commentId: ID
+  id: ID!
+  type: VoteType
 }
 
 type User {
-  articles: [Article!]!
-  comments: [Comment!]!
+  articles: [Article!]
+  comments: [Comment!]
   createdAt: DateTime!
   firstName: String!
   id: ID!
@@ -131,4 +122,9 @@ type Vote {
 enum VoteType {
   DOWN
   UP
+}
+
+type VoteTypeCount {
+  count: Int!
+  type: VoteType!
 }
