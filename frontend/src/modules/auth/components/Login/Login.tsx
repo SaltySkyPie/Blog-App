@@ -2,7 +2,7 @@ import { appConfig } from '@app/modules/common/utils/config'
 import { Box, Button, Container, Divider, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import { Field, Form, Formik } from 'formik'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useSignIn } from 'react-auth-kit'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
@@ -19,11 +19,6 @@ interface FormValues {
 
 const loginEndpoint = `${appConfig.rest.url}/auth/login`
 
-const validationSchema: Yup.Schema<FormValues> = Yup.object({
-  username: Yup.string().required('Username is required'),
-  password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
-})
-
 const LoginForm: React.FC = () => {
   const initialValues: FormValues = {
     username: '',
@@ -34,6 +29,17 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate()
   const signIn = useSignIn()
   const user = useProfile()
+
+  const validationSchema: Yup.Schema<FormValues> = useMemo(
+    () =>
+      Yup.object({
+        username: Yup.string().required(`${t('username')} ${t('isRequired')}`),
+        password: Yup.string()
+          .required(`${t('password')} ${t('isRequired')}`)
+          .min(6, t('minLength', { what: t('password'), length: 6 })),
+      }),
+    [t]
+  )
 
   useEffect(() => {
     if (user) {
