@@ -45,11 +45,6 @@ input CreateCommentInput {
   content: String!
 }
 
-input CreateVoteInput {
-  commentId: ID!
-  type: VoteType!
-}
-
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -59,20 +54,20 @@ type Mutation {
   changeState(id: ID!, state: ArticleState!): Article!
   createArticle(createArticleInput: CreateArticleInput!): Article!
   createComment(createCommentInput: CreateCommentInput!): Comment!
-  createVote(createVoteInput: CreateVoteInput!): Vote!
   removeArticle(id: Int!): Boolean!
   removeComment(id: ID!): Boolean!
   removeVote(id: ID!): Boolean!
   updateArticle(updateArticleInput: UpdateArticleInput!): Article!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
-  updateVote(updateVoteInput: UpdateVoteInput!): Vote!
+  updateOrCreateVote(updateOrCreateVoteInput: UpdateOrCreateVoteInput!): Vote
 }
 
 type Query {
   article(id: ID!): Article!
-  articleComments(articleId: ID!, skip: Float, take: Float): [Comment!]!
-  articles(skip: Float, take: Float): [Article!]!
-  user(id: Int!): User!
+  articleComments(articleId: ID!, limit: Int, offset: Int): [Comment!]!
+  articles(limit: Int, offset: Int): [Article!]!
+  me: User!
+  user(id: ID!): User!
   userArticle(id: ID!): Article!
   userArticles: [Article!]!
 }
@@ -92,9 +87,8 @@ input UpdateCommentInput {
   id: ID!
 }
 
-input UpdateVoteInput {
+input UpdateOrCreateVoteInput {
   commentId: ID
-  id: ID!
   type: VoteType
 }
 
@@ -127,4 +121,5 @@ enum VoteType {
 type VoteTypeCount {
   count: Int!
   type: VoteType!
+  voted: Boolean
 }
