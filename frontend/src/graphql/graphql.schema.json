@@ -500,62 +500,9 @@
         "possibleTypes": null
       },
       {
-        "kind": "INPUT_OBJECT",
-        "name": "CreateVoteInput",
-        "description": null,
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "commentId",
-            "description": null,
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "type",
-            "description": null,
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "ENUM",
-                "name": "VoteType",
-                "ofType": null
-              }
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
         "kind": "SCALAR",
         "name": "DateTime",
         "description": "A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Float",
-        "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -696,39 +643,6 @@
               "ofType": {
                 "kind": "OBJECT",
                 "name": "Comment",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "createVote",
-            "description": null,
-            "args": [
-              {
-                "name": "createVoteInput",
-                "description": null,
-                "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "CreateVoteInput",
-                    "ofType": null
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Vote",
                 "ofType": null
               }
             },
@@ -901,18 +815,18 @@
             "deprecationReason": null
           },
           {
-            "name": "updateVote",
+            "name": "updateOrCreateVote",
             "description": null,
             "args": [
               {
-                "name": "updateVoteInput",
+                "name": "updateOrCreateVoteInput",
                 "description": null,
                 "type": {
                   "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "UpdateVoteInput",
+                    "name": "UpdateOrCreateVoteInput",
                     "ofType": null
                   }
                 },
@@ -922,13 +836,9 @@
               }
             ],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "Vote",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "Vote",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -998,11 +908,11 @@
                 "deprecationReason": null
               },
               {
-                "name": "skip",
+                "name": "limit",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Float",
+                  "name": "Int",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -1010,11 +920,11 @@
                 "deprecationReason": null
               },
               {
-                "name": "take",
+                "name": "offset",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Float",
+                  "name": "Int",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -1047,11 +957,11 @@
             "description": null,
             "args": [
               {
-                "name": "skip",
+                "name": "limit",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Float",
+                  "name": "Int",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -1059,11 +969,11 @@
                 "deprecationReason": null
               },
               {
-                "name": "take",
+                "name": "offset",
                 "description": null,
                 "type": {
                   "kind": "SCALAR",
-                  "name": "Float",
+                  "name": "Int",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -1092,6 +1002,22 @@
             "deprecationReason": null
           },
           {
+            "name": "me",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "user",
             "description": null,
             "args": [
@@ -1103,7 +1029,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "Int",
+                    "name": "ID",
                     "ofType": null
                   }
                 },
@@ -1337,7 +1263,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "UpdateVoteInput",
+        "name": "UpdateOrCreateVoteInput",
         "description": null,
         "fields": null,
         "inputFields": [
@@ -1348,22 +1274,6 @@
               "kind": "SCALAR",
               "name": "ID",
               "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": null,
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
             },
             "defaultValue": null,
             "isDeprecated": false,
@@ -1708,6 +1618,18 @@
                 "name": "VoteType",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "voted",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
