@@ -2,7 +2,9 @@ import { CurrentUser } from '@app/auth/decorators/current-user.decorator'
 import { Public } from '@app/auth/decorators/public.decorator'
 import { JwtUser } from '@app/user/user.service'
 import { VoteType, VoteTypeCount } from '@app/vote/entities/vote.entity'
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
+import { VoteService } from '@app/vote/vote.service'
+import { Inject, forwardRef } from '@nestjs/common'
+import { Args, ID, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
 import { CommentService } from './comment.service'
 import { CreateCommentInput } from './dto/create-comment.input'
 import { UpdateCommentInput } from './dto/update-comment.input'
@@ -10,7 +12,11 @@ import { Comment } from './entities/comment.entity'
 
 @Resolver(() => Comment)
 export class CommentResolver {
-  constructor(private readonly commentService: CommentService) {}
+  constructor(
+    private readonly commentService: CommentService,
+    @Inject(forwardRef(() => VoteService))
+    private readonly voteService: VoteService
+  ) {}
 
   @Mutation(() => Comment)
   createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput, @CurrentUser() user: JwtUser) {
@@ -31,14 +37,14 @@ export class CommentResolver {
   @Query(() => [Comment], { name: 'articleComments' })
   findArticleAll(
     @Args('articleId', { type: () => ID }) articleId: string,
-    @Args('skip', { nullable: true }) skip?: number,
-    @Args('take', { nullable: true }) take?: number
+    @Args('offset', { nullable: true, type: () => Int }) skip?: number,
+    @Args('limit', { nullable: true, type: () => Int }) take?: number
   ) {
     return this.commentService.findArticleAll(articleId, skip, take)
   }
 
   @ResolveField('voteTypeCounts', () => [VoteTypeCount])
-  async votes(@Parent() comment: Comment) {
+  async votes(@Parent() comment: Comment, @CurrentUser() user: JwtUser) {
     // i know this is not the best way to do this,
     // but since i dont have much time to do this, i'll explain the correct way to do this
 
@@ -48,13 +54,15 @@ export class CommentResolver {
 
     // the pros of this is that it will be much faster to query the vote count
     // the cons of this is that it will be harder to maintain the vote count when a vote is created or deleted and another column(s) is needed
+
     const voteCounts: VoteTypeCount[] = []
 
     for (const voteType of Object.values(VoteType)) {
-      const count = await this.commentService.countVotes(comment.id, voteType)
+      const count = await this.voteService.countVotes(comment.id, voteType)
       voteCounts.push({
         type: voteType,
         count,
+        voted: user ? await this.voteService.hasVoted(comment, user, voteType) : false,
       })
     }
 
