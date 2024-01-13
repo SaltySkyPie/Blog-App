@@ -108,7 +108,7 @@ export default function EditArticle() {
           onClick={() => {
             if (confirm(t('confirmBack'))) {
               void refetch()
-              navigate('/my-articles')
+              navigate(-1)
             }
           }}
           sx={{

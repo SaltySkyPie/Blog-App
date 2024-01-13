@@ -56,5 +56,20 @@
     "articleSaved": "Article saved",
     "back": "Back",
     "confirmBack": "Are you sure you want to go back? Your changes will be lost.",
-    "editArticleWarning": "You have unsaved changes! Make sure to click the save button before leaving this page."
+    "editArticleWarning": "You have unsaved changes! Make sure to click the save button before leaving this page.",
+    "loadMore": "Load more",
+    "articleManagement": "Article Management",
+    "language": "Language",
+    "userMenu": "User Menu",
+    "comments": "Comments",
+    "voteUp": "Upvote",
+    "voteDown": "Downvote",
+    "needLoginVote": "You need to be logged in to vote.",
+    "somethingWentWrong": "Something went wrong",
+    "comment": "Comment",
+    "send": "Send",
+    "cancel": "Cancel",
+    "addComment": "Add comment",
+    "readMore": "Read more",
+    "passwordMismatch": "Passwords do not match"
 }

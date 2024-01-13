@@ -30,4 +30,4 @@ function stringAvatar(name: string, sx?: SxProps) {
 }
 
 export const Avatar = ({ name, sx }: { name?: string; sx?: SxProps }) =>
-  name ? <MUIAvatar {...stringAvatar(name, sx)} /> : <MUIAvatar />
+  name ? <MUIAvatar {...stringAvatar(name, sx)} /> : <MUIAvatar sx={sx} />

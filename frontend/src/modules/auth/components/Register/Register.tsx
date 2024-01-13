@@ -2,7 +2,7 @@ import { appConfig } from '@app/modules/common/utils/config'
 import { Box, Button, Divider, TextField, Typography } from '@mui/material'
 import axios, { AxiosError } from 'axios'
 import { Field, Form, Formik, FormikHelpers } from 'formik'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useSignIn } from 'react-auth-kit'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
@@ -25,17 +25,6 @@ interface FormValues {
 
 const registerEndpoint = `${appConfig.rest.url}/auth/register`
 
-const validationSchema: Yup.Schema<FormValues> = Yup.object({
-  username: Yup.string().required('Username is required'),
-  firstName: Yup.string().required('First Name is required'),
-  lastName: Yup.string().required('Last Name is required'),
-  middleName: Yup.string(),
-  password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
-  passwordConfirmation: Yup.string()
-    .required('Password confirmation is required')
-    .oneOf([Yup.ref('password')], 'Passwords must match'),
-})
-
 const RegistrationForm: React.FC = () => {
   const initialValues: FormValues = {
     username: '',
@@ -50,6 +39,23 @@ const RegistrationForm: React.FC = () => {
   const navigate = useNavigate()
   const signIn = useSignIn()
   const user = useProfile()
+
+  const validationSchema: Yup.Schema<FormValues> = useMemo(
+    () =>
+      Yup.object({
+        username: Yup.string().required(`${t('username')} ${t('isRequired')}`),
+        firstName: Yup.string().required(`${t('firstName')} ${t('isRequired')}`),
+        lastName: Yup.string().required(`${t('lastName')} ${t('isRequired')}`),
+        middleName: Yup.string(),
+        password: Yup.string()
+          .required(`${t('password')} ${t('isRequired')}`)
+          .min(6, t('minLength', { what: t('password'), length: 6 })),
+        passwordConfirmation: Yup.string()
+          .required(`${t('passwordConfirmation')} ${t('isRequired')}`)
+          .oneOf([Yup.ref('password')], t('passwordMismatch')),
+      }),
+    [t]
+  )
 
   useEffect(() => {
     if (user) {

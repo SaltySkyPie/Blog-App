@@ -1,4 +1,5 @@
 import { useProfile } from '@app/modules/auth/utils/useProfile'
+import { getLanguage, getLanguages, setLanguage } from '@app/modules/common/utils/i18next'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
@@ -24,6 +25,10 @@ const UserMenu = ({ isSmallScreen }: { isSmallScreen: boolean }) => {
 
   const navigate = useNavigate()
 
+  const languages = getLanguages()
+
+  const currentLanguage = getLanguage()
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
@@ -32,67 +37,92 @@ const UserMenu = ({ isSmallScreen }: { isSmallScreen: boolean }) => {
     setAnchorElUser(null)
   }
 
-  return user ? (
+  return (
     <>
-      <Tooltip title="User menu">
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} disableRipple>
-          <Avatar
-            name={`${user.firstName} ${user.lastName}
-                    `}
-          />
-          <Typography
-            sx={{
-              display: isSmallScreen ? 'none' : 'block',
-              ml: 1,
-              color: 'inherit',
-              textDecoration: 'none',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-            }}
-          >
-            {user.firstName}
-          </Typography>
-        </IconButton>
-      </Tooltip>
-      <Menu
-        id="menu-appbar"
-        anchorEl={anchorElUser}
-        sx={{ mt: '45px' }}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+      <Tooltip
+        title={t('language')}
+        sx={{
+          mr: 1,
         }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={Boolean(anchorElUser)}
-        onClose={handleCloseUserMenu}
       >
-        {settings.map((setting) => (
-          <Link to={setting.link} key={setting.link}>
-            <MenuItem onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">{t(setting.title)}</Typography>
-            </MenuItem>
-          </Link>
-        ))}
-
-        <MenuItem
+        <Button
           onClick={() => {
-            handleCloseUserMenu()
-            signOut()
-            navigate('/')
+            const nextLanguage = languages.find((language) => language !== currentLanguage)
+            if (nextLanguage) {
+             setLanguage(nextLanguage).catch(() => {})
+            }
           }}
         >
-          <Typography textAlign="center">{t('logout')}</Typography>
-        </MenuItem>
-      </Menu>
+          {currentLanguage}
+        </Button>
+      </Tooltip>
+      {user ? (
+        <>
+          <Tooltip
+            title={t('userMenu')}
+            sx={{
+              ml: 1,
+            }}
+          >
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} disableRipple>
+              <Avatar
+                name={`${user.firstName} ${user.lastName}`}
+              />
+              <Typography
+                sx={{
+                  display: isSmallScreen ? 'none' : 'block',
+                  ml: 1,
+                  color: 'inherit',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                }}
+              >
+                {user.firstName}
+              </Typography>
+            </IconButton>
+          </Tooltip>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            sx={{ mt: '45px' }}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <Link to={setting.link} key={setting.link}>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{t(setting.title)}</Typography>
+                </MenuItem>
+              </Link>
+            ))}
+
+            <MenuItem
+              onClick={() => {
+                handleCloseUserMenu()
+                signOut()
+                navigate('/')
+              }}
+            >
+              <Typography textAlign="center">{t('logout')}</Typography>
+            </MenuItem>
+          </Menu>
+        </>
+      ) : (
+        <Link to="/login">
+          <Button>{t('login')}</Button>
+        </Link>
+      )}
     </>
-  ) : (
-    <Link to="/login">
-      <Button>{t('login')}</Button>
-    </Link>
   )
 }
 
