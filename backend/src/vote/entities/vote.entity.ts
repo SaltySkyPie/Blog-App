@@ -71,4 +71,7 @@ export class VoteTypeCount {
 
   @Field(() => Int)
   count: number
+
+  @Field(() => Boolean, { nullable: true })
+  voted: boolean
 }
