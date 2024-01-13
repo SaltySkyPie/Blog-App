@@ -20,11 +20,24 @@ export class AccessTokenAuthGuard extends AuthGuard('jwt') {
     }
   }
 
-  canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
+    // Check if the route is marked as public using the IS_PUBLIC_KEY metadata
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()])
-    if (isPublic) {
-      return true
+
+    try {
+      // Call the superclass canActivate method
+      await super.canActivate(context)
+    } catch (e) {
+      // If an exception is caught and the route is public, allow access
+      if (isPublic) {
+        return true
+      }
+
+      // If the route is not public, rethrow the exception
+      throw e
     }
-    return super.canActivate(context)
+
+    // If no exception is thrown, allow access
+    return true
   }
 }
