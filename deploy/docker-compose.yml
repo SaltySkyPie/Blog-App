@@ -29,8 +29,6 @@ services:
       - blog_net
     environment:
       - PMA_HOST=blog_db
-      - PMA_USER=root
-      - PMA_PASSWORD=$DB_ROOT_PASSWORD
       - TZ=Europe/Prague
   backend:
     build:
@@ -57,6 +55,8 @@ services:
       context: ../frontend
       dockerfile: Dockerfile
     container_name: blog_frontend
+    depends_on:
+      - backend    
     ports:
       - 127.0.0.1:80:80
     networks:
