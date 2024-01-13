@@ -1,0 +1,54 @@
+query getArticleComments($articleId: ID!, $limit: Int, $offset: Int) {
+  articleComments(articleId: $articleId, limit: $limit, offset: $offset) {
+    id
+    voteTypeCounts {
+      type
+      count
+      voted
+    }
+    user {
+      id
+      username
+      firstName
+      lastName
+    }
+    content
+    createdAt
+    updatedAt
+  }
+}
+
+
+mutation voteArticleComment($input: UpdateOrCreateVoteInput!) {
+  updateOrCreateVote(updateOrCreateVoteInput: $input) {
+    comment {
+      id
+      voteTypeCounts {
+        type
+        count
+        voted
+      }
+    }
+  }
+}
+
+
+mutation createComment($input: CreateCommentInput!) {
+  createComment(createCommentInput: $input) {
+    id
+    voteTypeCounts {
+      type
+      count
+      voted
+    }
+    user {
+      id
+      username
+      firstName
+      lastName
+    }
+    content
+    createdAt
+    updatedAt
+  }
+}
