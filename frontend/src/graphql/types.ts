@@ -70,7 +70,6 @@ export type Mutation = {
   createComment: Comment;
   removeArticle: Scalars['Boolean']['output'];
   removeComment: Scalars['Boolean']['output'];
-  removeVote: Scalars['Boolean']['output'];
   updateArticle: Article;
   updateComment: Comment;
   updateOrCreateVote?: Maybe<Vote>;
@@ -99,11 +98,6 @@ export type MutationRemoveArticleArgs = {
 
 
 export type MutationRemoveCommentArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationRemoveVoteArgs = {
   id: Scalars['ID']['input'];
 };
 

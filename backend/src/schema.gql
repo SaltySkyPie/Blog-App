@@ -56,7 +56,6 @@ type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   removeArticle(id: Int!): Boolean!
   removeComment(id: ID!): Boolean!
-  removeVote(id: ID!): Boolean!
   updateArticle(updateArticleInput: UpdateArticleInput!): Article!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updateOrCreateVote(updateOrCreateVoteInput: UpdateOrCreateVoteInput!): Vote
