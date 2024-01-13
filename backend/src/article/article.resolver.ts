@@ -18,8 +18,8 @@ export class ArticleResolver {
 
   @Query(() => [Article], { name: 'articles' })
   @Public()
-  async findAll(@Args('skip', { nullable: true }) skip?: number, @Args('take', { nullable: true }) take?: number) {
-    return await this.articleService.findAllPublic()
+  async findAll(@Args('offset', { nullable: true, type: () => Int }) skip?: number, @Args('limit', { nullable: true , type: () => Int }) take?: number) {
+    return await this.articleService.findAllPublic(skip, take)
   }
 
   @Query(() => Article, { name: 'article' })

@@ -1,24 +1,55 @@
-import { Injectable } from '@nestjs/common'
+import { CommentService } from '@app/comment/comment.service'
+import { Comment } from '@app/comment/entities/comment.entity'
+import { JwtUser, UserService } from '@app/user/user.service'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { CreateVoteInput } from './dto/create-vote.input'
-import { UpdateVoteInput } from './dto/update-vote.input'
-import { Vote } from './entities/vote.entity'
-import { JwtUser, UserService } from '@app/user/user.service'
-import { CommentService } from '@app/comment/comment.service'
+import { UpdateOrCreateVoteInput } from './dto/update-or-create-vote.input'
+import { Vote, VoteType } from './entities/vote.entity'
 
 @Injectable()
 export class VoteService {
-  constructor(@InjectRepository(Vote) private voteRepository: Repository<Vote>,
+  constructor(
+    @InjectRepository(Vote) private voteRepository: Repository<Vote>,
     private userService: UserService,
+    @Inject(forwardRef(() => CommentService))
     private commentService: CommentService
   ) {}
 
-  async create(createVoteInput: CreateVoteInput, user: JwtUser) {
-    const vote = this.voteRepository.create(createVoteInput)
-    vote.user = await this.userService.findOneById(user.id)
-    vote.comment = await this.commentService.findOne(createVoteInput.commentId)
-    return this.voteRepository.save(vote)
+  async updateOrCreate(updateOrCreateVoteInput: UpdateOrCreateVoteInput, user: JwtUser) {
+    const { commentId, type } = updateOrCreateVoteInput
+
+    const vote = await this.voteRepository.findOne({
+      where: {
+        comment: {
+          id: commentId,
+        },
+        user: {
+          id: user.id,
+        },
+      },
+    })
+
+    if (!type) {
+      if (vote) {
+        return await this.voteRepository.remove(vote)
+      }
+
+      return null
+    }
+
+    if (vote) {
+      vote.type = type
+      return this.voteRepository.save(vote)
+    }
+
+    const newVote = this.voteRepository.create(updateOrCreateVoteInput)
+
+    newVote.user = await this.userService.findOneById(user.id)
+
+    newVote.comment = await this.commentService.findOne(commentId)
+
+    return this.voteRepository.save(newVote)
   }
 
   findAll() {
@@ -31,17 +62,6 @@ export class VoteService {
     })
   }
 
-  async update(id: string, updateVoteInput: UpdateVoteInput, user: JwtUser) {
-    const vote = await this.findOne(id)
-    if (vote.user.id !== user.id) {
-      throw new Error('You are not allowed to update this vote')
-    }
-    
-    await this.voteRepository.update({ id }, updateVoteInput)
-
-    return await this.findOne(id)
-  }
-
   async remove(id: string, user: JwtUser) {
     const vote = await this.findOne(id)
 
@@ -52,5 +72,32 @@ export class VoteService {
     await this.voteRepository.remove(vote)
 
     return true
+  }
+
+  async hasVoted(comment: Comment, user: JwtUser, type: VoteType) {
+    const vote = await this.voteRepository.findOne({
+      where: {
+        comment: {
+          id: comment.id,
+        },
+        user: {
+          id: user.id,
+        },
+        type,
+      },
+    })
+
+    return !!vote
+  }
+
+  async countVotes(commentId: string, type: VoteType) {
+    return await this.voteRepository.count({
+      where: {
+        comment: {
+          id: commentId,
+        },
+        type,
+      },
+    })
   }
 }

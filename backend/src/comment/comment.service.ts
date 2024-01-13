@@ -1,6 +1,5 @@
 import { ArticleService } from '@app/article/article.service'
 import { JwtUser, UserService } from '@app/user/user.service'
-import { VoteType } from '@app/vote/entities/vote.entity'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
@@ -33,6 +32,9 @@ export class CommentService {
       },
       skip,
       take,
+      order: {
+        createdAt: 'DESC',
+      },
     })
   }
 
@@ -64,14 +66,5 @@ export class CommentService {
     await this.commentRepository.remove(comment)
 
     return true
-  }
-
-  async countVotes(commentId: string, type: VoteType) {
-    return await this.commentRepository
-      .createQueryBuilder('comment')
-      .leftJoinAndSelect('comment.votes', 'vote')
-      .where('comment.id = :commentId', { commentId })
-      .andWhere('vote.type = :type', { type })
-      .getCount()
   }
 }
