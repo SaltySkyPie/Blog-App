@@ -63,23 +63,17 @@ export type CreateCommentInput = {
   content: Scalars['String']['input'];
 };
 
-export type CreateVoteInput = {
-  commentId: Scalars['ID']['input'];
-  type: VoteType;
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   changeState: Article;
   createArticle: Article;
   createComment: Comment;
-  createVote: Vote;
   removeArticle: Scalars['Boolean']['output'];
   removeComment: Scalars['Boolean']['output'];
   removeVote: Scalars['Boolean']['output'];
   updateArticle: Article;
   updateComment: Comment;
-  updateVote: Vote;
+  updateOrCreateVote?: Maybe<Vote>;
 };
 
 
@@ -96,11 +90,6 @@ export type MutationCreateArticleArgs = {
 
 export type MutationCreateCommentArgs = {
   createCommentInput: CreateCommentInput;
-};
-
-
-export type MutationCreateVoteArgs = {
-  createVoteInput: CreateVoteInput;
 };
 
 
@@ -129,8 +118,8 @@ export type MutationUpdateCommentArgs = {
 };
 
 
-export type MutationUpdateVoteArgs = {
-  updateVoteInput: UpdateVoteInput;
+export type MutationUpdateOrCreateVoteArgs = {
+  updateOrCreateVoteInput: UpdateOrCreateVoteInput;
 };
 
 export type Query = {
@@ -138,6 +127,7 @@ export type Query = {
   article: Article;
   articleComments: Array<Comment>;
   articles: Array<Article>;
+  me: User;
   user: User;
   userArticle: Article;
   userArticles: Array<Article>;
@@ -151,19 +141,19 @@ export type QueryArticleArgs = {
 
 export type QueryArticleCommentsArgs = {
   articleId: Scalars['ID']['input'];
-  skip?: InputMaybe<Scalars['Float']['input']>;
-  take?: InputMaybe<Scalars['Float']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryArticlesArgs = {
-  skip?: InputMaybe<Scalars['Float']['input']>;
-  take?: InputMaybe<Scalars['Float']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryUserArgs = {
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
 
@@ -186,9 +176,8 @@ export type UpdateCommentInput = {
   id: Scalars['ID']['input'];
 };
 
-export type UpdateVoteInput = {
+export type UpdateOrCreateVoteInput = {
   commentId?: InputMaybe<Scalars['ID']['input']>;
-  id: Scalars['ID']['input'];
   type?: InputMaybe<VoteType>;
 };
 
@@ -224,6 +213,7 @@ export type VoteTypeCount = {
   __typename?: 'VoteTypeCount';
   count: Scalars['Int']['output'];
   type: VoteType;
+  voted?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type CreateArticleMutationVariables = Exact<{
@@ -247,7 +237,10 @@ export type GetUserArticleQueryVariables = Exact<{
 
 export type GetUserArticleQuery = { __typename?: 'Query', userArticle: { __typename?: 'Article', id: string, title: string, perex: string, createdAt: any, imageUrl?: string | null, content: string } };
 
-export type GetArticlesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetArticlesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
 
 
 export type GetArticlesQuery = { __typename?: 'Query', articles: Array<{ __typename?: 'Article', id: string, title: string, perex: string, createdAt: any, imageUrl?: string | null, user: { __typename?: 'User', id: string, firstName: string, lastName: string, middleName?: string | null } }> };
@@ -263,6 +256,29 @@ export type GetArticleQueryVariables = Exact<{
 
 
 export type GetArticleQuery = { __typename?: 'Query', article: { __typename?: 'Article', id: string, title: string, perex: string, createdAt: any, imageUrl?: string | null, content: string, user: { __typename?: 'User', id: string, firstName: string, lastName: string, middleName?: string | null } } };
+
+export type GetArticleCommentsQueryVariables = Exact<{
+  articleId: Scalars['ID']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetArticleCommentsQuery = { __typename?: 'Query', articleComments: Array<{ __typename?: 'Comment', id: string, content: string, createdAt: any, updatedAt: any, voteTypeCounts: Array<{ __typename?: 'VoteTypeCount', type: VoteType, count: number, voted?: boolean | null }>, user: { __typename?: 'User', id: string, username: string, firstName: string, lastName: string } }> };
+
+export type VoteArticleCommentMutationVariables = Exact<{
+  input: UpdateOrCreateVoteInput;
+}>;
+
+
+export type VoteArticleCommentMutation = { __typename?: 'Mutation', updateOrCreateVote?: { __typename?: 'Vote', comment: { __typename?: 'Comment', id: string, voteTypeCounts: Array<{ __typename?: 'VoteTypeCount', type: VoteType, count: number, voted?: boolean | null }> } } | null };
+
+export type CreateCommentMutationVariables = Exact<{
+  input: CreateCommentInput;
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string, content: string, createdAt: any, updatedAt: any, voteTypeCounts: Array<{ __typename?: 'VoteTypeCount', type: VoteType, count: number, voted?: boolean | null }>, user: { __typename?: 'User', id: string, username: string, firstName: string, lastName: string } } };
 
 
 export const CreateArticleDocument = gql`
@@ -385,8 +401,8 @@ export type GetUserArticleLazyQueryHookResult = ReturnType<typeof useGetUserArti
 export type GetUserArticleSuspenseQueryHookResult = ReturnType<typeof useGetUserArticleSuspenseQuery>;
 export type GetUserArticleQueryResult = Apollo.QueryResult<GetUserArticleQuery, GetUserArticleQueryVariables>;
 export const GetArticlesDocument = gql`
-    query getArticles {
-  articles {
+    query getArticles($limit: Int, $offset: Int) {
+  articles(limit: $limit, offset: $offset) {
     id
     title
     perex
@@ -414,6 +430,8 @@ export const GetArticlesDocument = gql`
  * @example
  * const { data, loading, error } = useGetArticlesQuery({
  *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
  *   },
  * });
  */
@@ -527,3 +545,146 @@ export type GetArticleQueryHookResult = ReturnType<typeof useGetArticleQuery>;
 export type GetArticleLazyQueryHookResult = ReturnType<typeof useGetArticleLazyQuery>;
 export type GetArticleSuspenseQueryHookResult = ReturnType<typeof useGetArticleSuspenseQuery>;
 export type GetArticleQueryResult = Apollo.QueryResult<GetArticleQuery, GetArticleQueryVariables>;
+export const GetArticleCommentsDocument = gql`
+    query getArticleComments($articleId: ID!, $limit: Int, $offset: Int) {
+  articleComments(articleId: $articleId, limit: $limit, offset: $offset) {
+    id
+    voteTypeCounts {
+      type
+      count
+      voted
+    }
+    user {
+      id
+      username
+      firstName
+      lastName
+    }
+    content
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetArticleCommentsQuery__
+ *
+ * To run a query within a React component, call `useGetArticleCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetArticleCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetArticleCommentsQuery({
+ *   variables: {
+ *      articleId: // value for 'articleId'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useGetArticleCommentsQuery(baseOptions: Apollo.QueryHookOptions<GetArticleCommentsQuery, GetArticleCommentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetArticleCommentsQuery, GetArticleCommentsQueryVariables>(GetArticleCommentsDocument, options);
+      }
+export function useGetArticleCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetArticleCommentsQuery, GetArticleCommentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetArticleCommentsQuery, GetArticleCommentsQueryVariables>(GetArticleCommentsDocument, options);
+        }
+export function useGetArticleCommentsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetArticleCommentsQuery, GetArticleCommentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetArticleCommentsQuery, GetArticleCommentsQueryVariables>(GetArticleCommentsDocument, options);
+        }
+export type GetArticleCommentsQueryHookResult = ReturnType<typeof useGetArticleCommentsQuery>;
+export type GetArticleCommentsLazyQueryHookResult = ReturnType<typeof useGetArticleCommentsLazyQuery>;
+export type GetArticleCommentsSuspenseQueryHookResult = ReturnType<typeof useGetArticleCommentsSuspenseQuery>;
+export type GetArticleCommentsQueryResult = Apollo.QueryResult<GetArticleCommentsQuery, GetArticleCommentsQueryVariables>;
+export const VoteArticleCommentDocument = gql`
+    mutation voteArticleComment($input: UpdateOrCreateVoteInput!) {
+  updateOrCreateVote(updateOrCreateVoteInput: $input) {
+    comment {
+      id
+      voteTypeCounts {
+        type
+        count
+        voted
+      }
+    }
+  }
+}
+    `;
+export type VoteArticleCommentMutationFn = Apollo.MutationFunction<VoteArticleCommentMutation, VoteArticleCommentMutationVariables>;
+
+/**
+ * __useVoteArticleCommentMutation__
+ *
+ * To run a mutation, you first call `useVoteArticleCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVoteArticleCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [voteArticleCommentMutation, { data, loading, error }] = useVoteArticleCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useVoteArticleCommentMutation(baseOptions?: Apollo.MutationHookOptions<VoteArticleCommentMutation, VoteArticleCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VoteArticleCommentMutation, VoteArticleCommentMutationVariables>(VoteArticleCommentDocument, options);
+      }
+export type VoteArticleCommentMutationHookResult = ReturnType<typeof useVoteArticleCommentMutation>;
+export type VoteArticleCommentMutationResult = Apollo.MutationResult<VoteArticleCommentMutation>;
+export type VoteArticleCommentMutationOptions = Apollo.BaseMutationOptions<VoteArticleCommentMutation, VoteArticleCommentMutationVariables>;
+export const CreateCommentDocument = gql`
+    mutation createComment($input: CreateCommentInput!) {
+  createComment(createCommentInput: $input) {
+    id
+    voteTypeCounts {
+      type
+      count
+      voted
+    }
+    user {
+      id
+      username
+      firstName
+      lastName
+    }
+    content
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: Apollo.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, options);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;

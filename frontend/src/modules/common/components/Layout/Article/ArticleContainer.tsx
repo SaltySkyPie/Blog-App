@@ -17,7 +17,7 @@ export default function ArticleContainer({
   return (
     <Container>
       <Grid container spacing={spacing ?? 4} my={5}>
-        <Grid item container spacing={subContentSpacing ?? 4} xs={12} md={8}>
+        <Grid item container spacing={subContentSpacing ?? 4} xs={12} md={7.5}>
           {title && (
             <ArticleItemContainer>
               <Typography variant="h3" fontWeight={'bold'}>
@@ -29,7 +29,7 @@ export default function ArticleContainer({
           {mainContent}
         </Grid>
         <Grid item xs={12} md={1} />
-        <Grid item container xs={12} md={3} mt={5}>
+        <Grid item container xs={12} md={3.5} mt={5} sx={{ height: 0 }}>
           {sideContent}
         </Grid>
       </Grid>

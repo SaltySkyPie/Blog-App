@@ -1,8 +1,8 @@
 
 
 
-query getArticles {
-articles {
+query getArticles($limit: Int, $offset: Int) {
+  articles(limit: $limit, offset: $offset) {
     id
     title
     perex

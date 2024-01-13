@@ -1,12 +1,16 @@
 import { GetArticlesQuery } from '@app/graphql/types'
 import { Avatar } from '@app/modules/common/components/Misc/Avatar'
+import { useTimeAgo } from '@app/modules/common/utils/useTimeAgo'
 import { Box, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 export default function ArticleListItem({ article }: { article: GetArticlesQuery['articles'][0] }) {
   const authorName = `${article.user.firstName} ${article.user.lastName}`
 
-  const date = new Date(article.createdAt)
+  const date = useTimeAgo(article.createdAt)
+
+  const { t } = useTranslation()
   return (
     <Grid item xs={12}>
       <Card
@@ -61,13 +65,13 @@ export default function ArticleListItem({ article }: { article: GetArticlesQuery
               <Box sx={{ ml: 1 }}>
                 <Typography variant="subtitle2">{authorName}</Typography>
                 <Typography variant="subtitle2" color="text.secondary">
-                  {date.toLocaleDateString()}
+                  {date}
                 </Typography>
               </Box>
             </Box>
             <Link to={`/article/${article.id}`}>
               <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
-                <Typography variant="h6">Read more</Typography>
+                <Typography variant="h6">{t('readMore')}</Typography>
               </Box>
             </Link>
           </CardActions>
