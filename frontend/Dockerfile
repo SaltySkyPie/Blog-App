@@ -1,13 +1,13 @@
 # Use an official Node runtime as a parent image
 FROM node:20-alpine as build
 
-ARG GRAPHQL_URL=http://localhost:3001/graphql
+ARG GRAPHQL_URL
 ENV VITE_GRAPHQL_URL=$GRAPHQL_URL
 
-ARG GRAPHQL_WS=ws://localhost:3001/graphql
+ARG GRAPHQL_WS
 ENV VITE_GRAPHQL_WS=$GRAPHQL_WS
 
-ARG REST_URL=http://localhost:3001/api
+ARG REST_URL
 ENV VITE_REST_URL=$REST_URL
 
 # Set the working directory in the container
@@ -30,9 +30,10 @@ FROM nginx:alpine
 
 # Copy the built React app to Nginx's web server directory
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80 for the Nginx server
-EXPOSE 80
+# Expose port 3000 for the Nginx server
+EXPOSE 3000
 
 # Start Nginx when the container runs
 CMD ["nginx", "-g", "daemon off;"]
