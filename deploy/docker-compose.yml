@@ -1,0 +1,62 @@
+version: '3.2'
+services:
+  database:
+    image: mysql:8
+    container_name: blog_db
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --lower_case_table_names=1
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root}
+      - TZ=Europe/Prague
+    # guest app port: 3306
+    networks:
+      - blog_net
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
+    volumes:
+      - ./data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: blog_backend
+    depends_on:
+      - database
+    # guest app port: 3001
+    ports:
+      - 4001:3001
+    networks:
+      - blog_net
+    environment:
+      - JWT_ACCESS_SECRET=$JWT_ACCESS_SECRET
+      - JWT_REFRESH_SECRET=$JWT_REFRESH_SECRET
+      - GRAPHQL_PLAYGROUND=$GRAPHQL_PLAYGROUND
+      - TYPEORM_HOST=${DB_HOST:-blog_db}
+      - TYPEORM_PORT=${DB_PORT:-3306}
+      - TYPEORM_USERNAME=${DB_USER:-root}
+      - TYPEORM_PASSWORD=${DB_PASSWORD:-$DB_ROOT_PASSWORD}
+      - TYPEORM_DATABASE=${DB_NAME:-blog_app}
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      args:
+        - GRAPHQL_URL=$GRAPHQL_URL
+        - GRAPHQL_WS=$GRAPHQL_WS
+        - REST_URL=$REST_URL
+    container_name: blog_frontend
+    depends_on:
+      - backend
+    # guest app port: 3000
+    ports:
+      - 4000:3000
+    networks:
+      - blog_net
+
+networks:
+  blog_net:
+    driver: bridge
