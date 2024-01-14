@@ -14,7 +14,7 @@ Local database development environment is available in the README.md file of env
 
 ## Deployment
 
-TBD: Deployment instructions **will be** available in the README.md files in the deployment directory.
+Deployment instructions are available in the README.md files in the deployment directory.
 
 ## Formatting and Linting
 
