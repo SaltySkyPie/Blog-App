@@ -5,10 +5,9 @@ services:
     container_name: blog_db
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --lower_case_table_names=1
     environment:
-      - MYSQL_ROOT_PASSWORD=$DB_ROOT_PASSWORD
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root}
       - TZ=Europe/Prague
-    ports:
-      - 127.0.0.1:3306:3306
+    # guest app port: 3306
     networks:
       - blog_net
     healthcheck:
@@ -18,18 +17,7 @@ services:
     volumes:
       - ./data:/var/lib/mysql
       - ./init:/docker-entrypoint-initdb.d
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: blog_phpmyadmin
-    depends_on:
-      - database
-    ports:
-      - 127.0.0.1:8082:80
-    networks:
-      - blog_net
-    environment:
-      - PMA_HOST=blog_db
-      - TZ=Europe/Prague
+
   backend:
     build:
       context: ../backend
@@ -37,35 +25,38 @@ services:
     container_name: blog_backend
     depends_on:
       - database
+    # guest app port: 3001
     ports:
-      - 127.0.0.1:3001:3001
+      - 4001:3001
     networks:
       - blog_net
     environment:
       - JWT_ACCESS_SECRET=$JWT_ACCESS_SECRET
       - JWT_REFRESH_SECRET=$JWT_REFRESH_SECRET
       - GRAPHQL_PLAYGROUND=$GRAPHQL_PLAYGROUND
-      - TYPEORM_HOST=blog_db
-      - TYPEORM_PORT=3306
-      - TYPEORM_USERNAME=root
-      - TYPEORM_PASSWORD=$DB_ROOT_PASSWORD
-      - TYPEORM_DATABASE=blog_app
+      - TYPEORM_HOST=${DB_HOST:-blog_db}
+      - TYPEORM_PORT=${DB_PORT:-3306}
+      - TYPEORM_USERNAME=${DB_USER:-root}
+      - TYPEORM_PASSWORD=${DB_PASSWORD:-$DB_ROOT_PASSWORD}
+      - TYPEORM_DATABASE=${DB_NAME:-blog_app}
+
   frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile
+      args:
+        - GRAPHQL_URL=$GRAPHQL_URL
+        - GRAPHQL_WS=$GRAPHQL_WS
+        - REST_URL=$REST_URL
     container_name: blog_frontend
     depends_on:
-      - backend    
+      - backend
+    # guest app port: 3000
     ports:
-      - 127.0.0.1:80:80
+      - 4000:3000
     networks:
       - blog_net
-    environment:
-      - GRAPHQL_URL=$GRAPHQL_URL
-      - GRAPHQL_WS=$GRAPHQL_WS
-      - REST_URL=$REST_URL
+
 networks:
   blog_net:
     driver: bridge
-
