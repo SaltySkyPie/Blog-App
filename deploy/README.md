@@ -62,7 +62,7 @@ Preqrequisites:
 
 Environment variables are stored in `.env` file. Use .env.example as a template.
 
-If you wish to use external database, you can specify its connection parameters in `.env` file. Otherwise do comment specified variables in .env file.
+If you wish to use database within the container, use `docker-compose-with-db.yml` file instead of `docker-compose.yml`. Start/Stop scripts are also provided with the '-db' suffix.
 
 ### Usage
 
