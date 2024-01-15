@@ -2,6 +2,8 @@
 
 This repository contains the solution to the Applifting Fullstack Excercise.
 
+Demo is deployed at https://blog.saltyskypie.com
+
 
 ## Installation
 
