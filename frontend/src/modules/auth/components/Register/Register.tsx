@@ -57,11 +57,16 @@ const RegistrationForm: React.FC = () => {
     [t]
   )
 
-  useEffect(() => {
-    if (user) {
-      navigate('/')
-    }
-  }, [user, navigate])
+    const continuePath = useMemo(() => {
+      const params = new URLSearchParams(window.location.search)
+      return params.get('continue')
+    }, [])
+
+    useEffect(() => {
+      if (user) {
+        navigate((continuePath || '/'))
+      }
+    }, [user, navigate, continuePath])
 
   const handleSubmit = async (values: FormValues, formikBag: FormikHelpers<FormValues>) => {
     try {
@@ -89,7 +94,7 @@ const RegistrationForm: React.FC = () => {
       })
 
       toast.success(t('thanksForSignUp', { name: tokenInfo.firstName }))
-      navigate('/')
+      navigate((continuePath || '/'))
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 409) {
@@ -240,7 +245,10 @@ const RegistrationForm: React.FC = () => {
               >
                 {t('alreadyHaveAccount')}
                 <Link
-                  to="/login"
+                  to={{
+                    pathname: '/login',
+                    search: continuePath ? `?continue=${continuePath}` : '',
+                  }}
                   style={{
                     marginLeft: 3,
                   }}

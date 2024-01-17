@@ -50,7 +50,7 @@ export default function AppRouter() {
       <Route
         path="/article/:id/edit"
         element={
-          <RequireAuth loginPath={'/login'}>
+          <RequireAuth loginPath={'/login?continue=' + window.location.pathname}>
             <Suspense fallback={<LinearProgress />}>
               <EditArticle />
             </Suspense>
@@ -68,7 +68,7 @@ export default function AppRouter() {
       <Route
         path="/article/create"
         element={
-          <RequireAuth loginPath={'/login'}>
+          <RequireAuth loginPath={'/login?continue=' + window.location.pathname}>
             <Suspense fallback={<LinearProgress />}>
               <CreateArticle />
             </Suspense>
@@ -78,7 +78,7 @@ export default function AppRouter() {
       <Route
         path="/my-articles"
         element={
-          <RequireAuth loginPath={'/login'}>
+          <RequireAuth loginPath={'/login?continue=' + window.location.pathname}>
             <Suspense fallback={<LinearProgress />}>
               <ArticleManagement />
             </Suspense>

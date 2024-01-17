@@ -41,11 +41,16 @@ const LoginForm: React.FC = () => {
     [t]
   )
 
+  const continuePath = useMemo(() => {
+    const params = new URLSearchParams(window.location.search)
+    return params.get('continue')
+  }, [])
+
   useEffect(() => {
     if (user) {
-      navigate('/')
+      navigate((continuePath || '/'))
     }
-  }, [user, navigate])
+  }, [user, navigate, continuePath])
 
   const handleSubmit = async (values: FormValues) => {
     try {
@@ -73,7 +78,7 @@ const LoginForm: React.FC = () => {
       })
 
       toast.success(t('welcomeBack', { name: tokenInfo.firstName }))
-      navigate('/')
+      navigate((continuePath || '/'))
     } catch (error) {
       toast.error(t('invalidCredentials'))
     }
@@ -136,7 +141,10 @@ const LoginForm: React.FC = () => {
               >
                 {t('dontHaveAccount')}
                 <Link
-                  to="/register"
+                  to={{
+                    pathname: '/register',
+                    search: continuePath ? `?continue=${continuePath}` : '',
+                  }}
                   style={{
                     marginLeft: 3,
                   }}
