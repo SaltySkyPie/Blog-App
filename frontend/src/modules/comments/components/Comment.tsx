@@ -68,7 +68,7 @@ const Comment = ({ comment }: { comment: GetArticleCommentsQuery['articleComment
         </Box>
         <Box>
           <Typography variant="body1" color="text.secondary" sx={{
-            wordBreak: 'break-all'
+            wordBreak: 'break-word'
           }}>
             {comment.content}
           </Typography>
