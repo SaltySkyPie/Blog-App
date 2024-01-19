@@ -87,7 +87,7 @@ input UpdateCommentInput {
 }
 
 input UpdateOrCreateVoteInput {
-  commentId: ID
+  commentId: ID!
   type: VoteType
 }
 

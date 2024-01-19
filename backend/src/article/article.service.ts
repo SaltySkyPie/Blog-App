@@ -1,7 +1,7 @@
 import { JwtUser, UserService } from '@app/user/user.service'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { FindManyOptions, Repository } from 'typeorm'
+import { FindManyOptions, In, Repository } from 'typeorm'
 import { CreateArticleInput } from './dto/create-article.input'
 import { UpdateArticleInput } from './dto/update-article.input'
 import { Article, ArticleState } from './entities/article.entity'
@@ -50,7 +50,7 @@ export class ArticleService {
     return this.articleRepository.findOneOrFail({
       where: {
         id,
-        state: ArticleState.PUBLISHED || ArticleState.HIDDEN,
+        state: In([ArticleState.PUBLISHED, ArticleState.HIDDEN]),
       },
     })
   }
