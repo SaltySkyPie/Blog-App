@@ -1,9 +1,12 @@
 import { GetArticlesQuery } from '@app/graphql/types'
 import { Avatar } from '@app/modules/common/components/Misc/Avatar'
 import { useTimeAgo } from '@app/modules/common/utils/useTimeAgo'
-import { Box, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material'
+import { Box, CardActions, CardContent, Grid, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { ArticleCard } from './ArticleCard'
+import ArticleImage from './ArticleImage'
+import ArticlePerex from './ArticlePerex'
 
 export default function ArticleListItem({ article }: { article: GetArticlesQuery['articles'][0] }) {
   const authorName = `${article.user.firstName} ${article.user.lastName}`
@@ -13,51 +16,12 @@ export default function ArticleListItem({ article }: { article: GetArticlesQuery
   const { t } = useTranslation()
   return (
     <Grid item xs={12}>
-      <Card
-        sx={{
-          display: {
-            xs: 'block',
-            md: 'flex',
-          },
-        }}
-        elevation={3}
-      >
-        <CardMedia
-          component="img"
-          sx={{
-            width: {
-              xs: '100%',
-              md: 300,
-            },
-            height: {
-              xs: 200,
-              md: 'auto',
-            },
-          }}
-          image={!article.imageUrl || !article.imageUrl.length ? '/placeholder.webp' : article.imageUrl}
-          alt={article.title}
-        />
+      <ArticleCard>
+        <ArticleImage url={article.imageUrl} />
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
           <CardContent sx={{ flex: '1 0 auto' }}>
             <Typography variant="h4">{article.title}</Typography>
-            <Typography
-              variant="subtitle1"
-              color="text.secondary"
-              sx={{
-                my: 1,
-                overflow: 'hidden',
-                textOverflow: 'revert',
-                display: '-webkit-box',
-                WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 3,
-                height: {
-                  xs: 60,
-                  md: 80,
-                },
-              }}
-            >
-              {article.perex}
-            </Typography>
+            <ArticlePerex perex={article.perex} />
           </CardContent>
           <CardActions sx={{ display: 'flex', alignItems: 'center', p: 1, justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
@@ -76,7 +40,7 @@ export default function ArticleListItem({ article }: { article: GetArticlesQuery
             </Link>
           </CardActions>
         </Box>
-      </Card>
+      </ArticleCard>
     </Grid>
   )
 }

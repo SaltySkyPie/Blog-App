@@ -171,7 +171,7 @@ export type UpdateCommentInput = {
 };
 
 export type UpdateOrCreateVoteInput = {
-  commentId?: InputMaybe<Scalars['ID']['input']>;
+  commentId: Scalars['ID']['input'];
   type?: InputMaybe<VoteType>;
 };
 
@@ -229,7 +229,7 @@ export type GetUserArticleQueryVariables = Exact<{
 }>;
 
 
-export type GetUserArticleQuery = { __typename?: 'Query', userArticle: { __typename?: 'Article', id: string, title: string, perex: string, createdAt: any, imageUrl?: string | null, content: string } };
+export type GetUserArticleQuery = { __typename?: 'Query', userArticle: { __typename?: 'Article', id: string, title: string, perex: string, state: ArticleState, createdAt: any, imageUrl?: string | null, content: string } };
 
 export type GetArticlesQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -355,6 +355,7 @@ export const GetUserArticleDocument = gql`
     id
     title
     perex
+    state
     createdAt
     imageUrl
     content
