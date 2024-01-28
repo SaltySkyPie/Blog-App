@@ -35,7 +35,7 @@ export default function ArticleListItem({ article }: { article: GetArticlesQuery
             </Box>
             <Link to={`/article/${article.id}`}>
               <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
-                <Typography variant="h6">{t('readMore')}</Typography>
+                <Typography variant="body1">{t('readMore')}</Typography>
               </Box>
             </Link>
           </CardActions>
