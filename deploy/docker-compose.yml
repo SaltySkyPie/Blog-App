@@ -7,7 +7,7 @@ services:
     container_name: blog_backend
     # guest app port: 3001
     ports:
-      - 4001:3001
+      - ${BE_PORT:-4001}:3001
     networks:
       - blog_net
     environment:
@@ -33,7 +33,7 @@ services:
       - backend
     # guest app port: 3000
     ports:
-      - 4000:3000
+      - ${FE_PORT:-4000}:3000
     networks:
       - blog_net
 

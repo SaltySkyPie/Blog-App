@@ -64,6 +64,8 @@ Environment variables are stored in `.env` file. Use .env.example as a template.
 
 If you wish to use database within the container, use `docker-compose-with-db.yml` file instead of `docker-compose.yml`. Start/Stop scripts are also provided with the '-db' suffix.
 
+If you wish to use the all in one solution, use `docker-compose-allinone.yml` file instead of `docker-compose.yml`. Start/Stop scripts are also provided with the '-aio' suffix.
+
 ### Usage
 
 Open `http://localhost:<port>` in your browser.
