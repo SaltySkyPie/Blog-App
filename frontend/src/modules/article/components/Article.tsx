@@ -2,16 +2,16 @@ import { useGetArticleLazyQuery } from '@app/graphql/types'
 import { useProfile } from '@app/modules/auth/utils/useProfile'
 import ArticleContainer from '@app/modules/common/components/Layout/Article/ArticleContainer'
 import ArticleItemContainer from '@app/modules/common/components/Layout/Article/ArticleItemContainer'
-import { Avatar } from '@app/modules/common/components/Misc/Avatar'
 import NotFoundPage from '@app/modules/common/components/Misc/NotFound'
 import Share from '@app/modules/common/components/Misc/Share'
 import { useTimeAgo } from '@app/modules/common/utils/useTimeAgo'
-import { Box, Button, Divider, LinearProgress, Typography } from '@mui/material'
+import { Box, Button, Divider, LinearProgress } from '@mui/material'
 import MDEditor from '@uiw/react-md-editor'
 import { t } from 'i18next'
 import { useCallback, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import CommentList from '../../comments/components/CommentList'
+import WrittenBy from './WrittenBy'
 
 export default function Article() {
   const { id } = useParams<{ id: string }>()
@@ -70,28 +70,7 @@ export default function Article() {
       sideContent={
         <>
           <ArticleItemContainer>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Typography variant="h4">{t('writtenBy')}</Typography>
-              <Box sx={{ my: 2 }}>
-                <Avatar
-                  name={authorName}
-                  sx={{
-                    width: '100px',
-                    height: '100px',
-                    fontSize: '50px',
-                  }}
-                />
-              </Box>
-              <Typography variant="h5">{authorWithMiddleName}</Typography>
-              <Typography variant="caption">{date}</Typography>
-            </Box>
+            <WrittenBy authorName={authorName} authorWithMiddleName={authorWithMiddleName} date={date} />
             <Divider sx={{ my: 2 }} />
             <Share url={window.location.href} />
             {userId === article?.user.id && (

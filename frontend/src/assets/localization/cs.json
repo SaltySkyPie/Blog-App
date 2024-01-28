@@ -71,5 +71,6 @@
     "cancel": "Zrušit",
     "addComment": "Přidat komentář",
     "readMore": "Číst dále",
-    "passwordMismatch": "Hesla se neshodují"
+    "passwordMismatch": "Hesla se neshodují",
+    "myArticleListDescription": "Dvojklikem na stav článku jej můžete změnit."
 }

@@ -11,6 +11,7 @@ import {
   WhatsappShareButton,
   XIcon,
 } from 'react-share'
+import ShareSystem from './ShareSystem'
 
 const buttons = [
   {
@@ -38,6 +39,10 @@ const buttons = [
     component: WhatsappShareButton,
     icon: WhatsappIcon,
   },
+  {
+    title: 'Other',
+    component: ShareSystem,
+  },
 ]
 
 export default function Share({ url }: { url: string }) {
@@ -45,9 +50,7 @@ export default function Share({ url }: { url: string }) {
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       {buttons.map(({ title, component: Component, icon: Icon }) => (
         <Box sx={{ mx: 0.5 }} key={title}>
-          <Component url={url}>
-            <Icon size={32} round />
-          </Component>
+          <Component url={url}>{Icon && <Icon size={32} round />}</Component>
         </Box>
       ))}
     </Box>

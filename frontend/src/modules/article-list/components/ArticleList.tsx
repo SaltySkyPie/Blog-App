@@ -7,69 +7,60 @@ import ArticleListItem from './ArticleListItem'
 const ArticleList = () => {
   const { t } = useTranslation()
   const { data, loading, fetchMore } = useGetArticlesQuery({
-    variables: {
-      offset: 0,
-      limit: 5
-    },
+    variables: { offset: 0, limit: 5 },
     notifyOnNetworkStatusChange: true,
   })
 
-  const loadingFirstTime = useMemo(() => {
-    return loading && !data
-  }, [data, loading])
+  // Check if it's the first loading
+  const isLoadingFirstTime = useMemo(() => loading && !data, [data, loading])
 
-  const len = useMemo(() => {
-    if (!data) return 0
-    return data.articles.length
-  }, [data])
+  // Compute the length of articles
+  const articlesLength = useMemo(() => data?.articles.length || 0, [data])
 
-  const articles = useMemo(() => {
-    if (!data) return []
-    return data.articles
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [len])
+  // Memoize articles for performance
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const articles = useMemo(() => data?.articles || [], [articlesLength])
 
-  const loadMore = () => {
-    void fetchMore({
-      variables: {
-        offset: len,
-      },
-    })
-  }
+  // Render the articles list
+  const RecentArticles = useMemo(() => {
+    return (
+      <Grid container spacing={4}>
+        {articles.map((article, index) => (
+          <ArticleListItem key={index} article={article} />
+        ))}
+      </Grid>
+    )
+  }, [articles])
 
-  if (loadingFirstTime) return <LinearProgress />
+  // Render the load more button
+  const LoadMoreButton = useMemo(() => {
+    // Load more articles
+    const handleLoadMore = () => {
+      void fetchMore({ variables: { offset: articlesLength } })
+    }
+
+    return (
+      <Grid item xs={12} sx={{ textAlign: 'center' }}>
+        <Button variant="text" color="primary" disabled={loading} sx={{ my: 2 }} onClick={handleLoadMore}>
+          {loading ? <CircularProgress /> : t('loadMore')}
+        </Button>
+      </Grid>
+    )
+  }, [articlesLength, fetchMore, loading, t])
+
+  if (isLoadingFirstTime) return <LinearProgress />
 
   return (
-    <>
-      <Container>
-        <Box sx={{ my: 5, textAlign: 'center' }}>
-          <Typography variant="h3" gutterBottom>
-            {t('articleList')}
-          </Typography>
-        </Box>
-        <Grid container spacing={4}>
-          {articles.map((article, index) => (
-            <ArticleListItem article={article} key={index} />
-          ))}
-          <Divider />
-          <Grid item xs={12} sx={{ textAlign: 'center' }}>
-            <Button
-              variant="text"
-              color="primary"
-              disabled={loading}
-              sx={{
-                my: 2,
-              }}
-              onClick={() => {
-                loadMore()
-              }}
-            >
-              {loading ? <CircularProgress /> : t('loadMore')}
-            </Button>
-          </Grid>
-        </Grid>
-      </Container>
-    </>
+    <Container>
+      <Box sx={{ my: 5, textAlign: 'center' }}>
+        <Typography variant="h3" gutterBottom>
+          {t('articleList')}
+        </Typography>
+      </Box>
+      {RecentArticles}
+      <Divider />
+      {LoadMoreButton}
+    </Container>
   )
 }
 

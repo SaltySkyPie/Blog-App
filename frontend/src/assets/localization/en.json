@@ -71,5 +71,6 @@
     "cancel": "Cancel",
     "addComment": "Add comment",
     "readMore": "Read more",
-    "passwordMismatch": "Passwords do not match"
+    "passwordMismatch": "Passwords do not match",
+    "myArticleListDescription": "Double click on the status to change it."
 }

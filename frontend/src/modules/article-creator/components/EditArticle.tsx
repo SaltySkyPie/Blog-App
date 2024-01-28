@@ -1,38 +1,38 @@
-import {
-  ArticleState,
-  useGetUserArticleLazyQuery,
-  useGetUserArticlesLazyQuery,
-  useUpdateArticleMutation,
-} from '@app/graphql/types'
-import { Box, Button, LinearProgress } from '@mui/material'
-import { FormikErrors } from 'formik'
+import { ArticleState, useGetUserArticleLazyQuery, useUpdateArticleMutation } from '@app/graphql/types'
+import { LinearProgress } from '@mui/material'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import EditorEngine, { InjectedComponent } from './EditorEngine'
+import EditorEngine from './EditorEngine'
 import { useEditorEngineFormik } from './useEditorEngineFormik'
+import useInjectedComponentsAction from './useInjectedComponentsAction'
 
+// Define the EditArticle component
 export default function EditArticle() {
+  // Hooks for navigation and translation
   const navigate = useNavigate()
-
   const { t } = useTranslation()
 
+  // GraphQL mutations and queries
   const [updateArticle] = useUpdateArticleMutation()
-
-  const [, { refetch }] = useGetUserArticlesLazyQuery()
-
-  const { id } = useParams<{ id: string }>()
   const [getArticle, { data, loading, error }] = useGetUserArticleLazyQuery()
 
+  // Extract article ID from URL parameters
+  const { id } = useParams<{ id: string }>()
+
+  // Fetch article data when component mounts or ID changes
   useEffect(() => {
     if (id) void getArticle({ variables: { id } })
   }, [getArticle, id])
 
+  // Extract the article data from the GraphQL query response
   const article = data?.userArticle
 
+  // Initialize formik for form handling
   const formik = useEditorEngineFormik()
 
+  // Update formik values when article data is loaded
   useEffect(() => {
     if (article) {
       void formik.setValues({
@@ -42,16 +42,18 @@ export default function EditArticle() {
         imageUrl: article.imageUrl ?? '',
       })
     }
+    // disabled due to infinite loop when formik is updated
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [article])
 
-  if (loading) return <LinearProgress />
-  if (error || !id) return <></>
-
+  // Handle form submission
   const handleSubmit = async (state?: ArticleState) => {
     const { title, content, imageUrl, perex } = formik.values
 
+    if (!id) return
+
     try {
+      // Update article using GraphQL mutation
       const { errors } = await updateArticle({
         variables: {
           input: {
@@ -65,61 +67,33 @@ export default function EditArticle() {
         },
       })
 
+      // Handle potential errors
       if (errors) {
         const errorMessages = errors.map((error) => error.message).join(', ')
         toast.error(t('errorSavingArticle') + ': ' + errorMessages)
         return
       }
     } catch (error) {
-      if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string')
-        toast.error(t('errorSavingArticle') + ': ' + error.message)
+      // Handle unexpected errors
+      if (error instanceof Error) toast.error(t('errorSavingArticle') + ': ' + error.message)
       else toast.error(t('errorSavingArticle'))
       return
     }
 
+    // Show success message and navigate to the list of articles
     toast.success(t('articleSaved'))
-    void refetch()
     navigate('/my-articles')
   }
 
-  const formikErrors: FormikErrors<typeof formik.values> = formik.errors
+  // Custom hook for additional actions in the editor
+  const actions = useInjectedComponentsAction({ formik, handleSubmit, state: article?.state})
 
-  const actions: InjectedComponent = {
-    title: t('actions'),
-    component: (
-      <Box>
-        {Object.values(formikErrors).map((error) => (
-          <Box key={error} sx={{ color: 'red', my: 0.5 }}>
-            {error}
-          </Box>
-        ))}
-        <Button
-          variant="contained"
-          onClick={() => void handleSubmit()}
-          sx={{
-            m: 0.5,
-          }}
-          disabled={formik.isSubmitting || !formik.isValid}
-        >
-          {t('save')}
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => {
-            if (confirm(t('confirmBack'))) {
-              void refetch()
-              navigate(-1)
-            }
-          }}
-          sx={{
-            m: 0.5,
-          }}
-        >
-          {t('back')}
-        </Button>
-      </Box>
-    ),
-  }
+  // Show loading indicator while data is being fetched
+  if (loading) return <LinearProgress />
 
+  // Handle loading error or missing article ID
+  if (error || !id) return <></>
+
+  // Render the editor engine with injected components
   return <EditorEngine injectedComponents={[actions]} formik={formik} title={t('editArticle')} />
 }

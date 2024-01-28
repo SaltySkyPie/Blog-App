@@ -28,6 +28,7 @@ query getUserArticle($id: ID!) {
     id
     title
     perex
+    state
     createdAt
     imageUrl
     content

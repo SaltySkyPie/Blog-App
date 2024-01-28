@@ -1,24 +1,18 @@
-import { ArticleState, useCreateArticleMutation, useGetUserArticlesLazyQuery } from '@app/graphql/types'
-import { Box, Button } from '@mui/material'
-import { FormikErrors } from 'formik'
+import { ArticleState, useCreateArticleMutation } from '@app/graphql/types'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import EditorEngine, { InjectedComponent } from './EditorEngine'
+import EditorEngine from './EditorEngine'
 import { useEditorEngineFormik } from './useEditorEngineFormik'
+import useInjectedComponentsAction from './useInjectedComponentsAction'
 
 export default function CreateArticle() {
   const navigate = useNavigate()
-
   const { t } = useTranslation()
-
   const [createArticle] = useCreateArticleMutation()
-
-  const [, { refetch }] = useGetUserArticlesLazyQuery()
-
   const formik = useEditorEngineFormik()
 
-  const handleSubmit = async (state: ArticleState) => {
+  const handleSubmit = async (state?: ArticleState) => {
     const { title, content, imageUrl, perex } = formik.values
 
     try {
@@ -28,7 +22,7 @@ export default function CreateArticle() {
             title,
             content,
             imageUrl,
-            state,
+            state: state ?? ArticleState.Draft,
             perex,
           },
         },
@@ -47,59 +41,10 @@ export default function CreateArticle() {
     }
 
     toast.success(t('articleSaved'))
-    void refetch()
     navigate('/my-articles')
   }
 
-  const formikErrors: FormikErrors<typeof formik.values> = formik.errors
-
-  const actions: InjectedComponent = {
-    title: t('actions'),
-    component: (
-      <Box>
-        {Object.values(formikErrors).map((error) => (
-          <Box key={error} sx={{ color: 'red', my: 0.5 }}>
-            {error}
-          </Box>
-        ))}
-        <Button
-          variant="contained"
-          onClick={() => void handleSubmit(ArticleState.Published)}
-          sx={{
-            m: 0.5,
-          }}
-          disabled={formik.isSubmitting || !formik.isValid}
-        >
-          {t('publish')}
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => void handleSubmit(ArticleState.Draft)}
-          sx={{
-            m: 0.5,
-          }}
-          disabled={formik.isSubmitting || !formik.isValid}
-        >
-          {t('saveAsDraft')}
-        </Button>
-
-        <Button
-          variant="outlined"
-          onClick={() => {
-            if (confirm(t('confirmBack'))) {
-              void refetch()
-              navigate(-1)
-            }
-          }}
-          sx={{
-            m: 0.5,
-          }}
-        >
-          {t('back')}
-        </Button>
-      </Box>
-    ),
-  }
+  const actions = useInjectedComponentsAction({ formik, handleSubmit })
 
   return <EditorEngine injectedComponents={[actions]} formik={formik} title={t('createArticle')} />
 }

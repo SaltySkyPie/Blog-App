@@ -26,8 +26,6 @@ services:
     depends_on:
       - database
     # guest app port: 3001
-    ports:
-      - ${BE_PORT:-4001}:3001
     networks:
       - blog_net
     environment:
@@ -52,8 +50,19 @@ services:
     depends_on:
       - backend
     # guest app port: 3000
+    networks:
+      - blog_net
+
+  proxy:
+    image: nginx
+    container_name: blog_proxy
+    depends_on:
+      - backend
+      - frontend
     ports:
-      - ${FE_PORT:-4000}:3000
+      - ${PROXY_PORT:-80}:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - blog_net
 
