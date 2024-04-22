@@ -1,5 +1,4 @@
 #!/bin/bash
 
 docker-compose --env-file .env \
--f docker-compose-with-db.yml up \
---build
+-f docker-compose-with-db.yml up
