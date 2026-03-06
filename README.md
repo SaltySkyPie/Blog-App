@@ -1,6 +1,6 @@
 # Blog App
 
-This repository contains the solution to the Applifting Fullstack Excercise.
+This repository contains the solution to the Applifting Fullstack Exercise.
 
 Demo is deployed at https://blog.saltyskypie.com
 
